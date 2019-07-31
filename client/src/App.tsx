@@ -1,29 +1,8 @@
 import React from 'react';
 import logo from './logo.svg';
-import { createMuiTheme, CssBaseline, Theme } from '@material-ui/core';
+import { CssBaseline, Theme } from '@material-ui/core';
 import { ThemeProvider, makeStyles, createStyles } from '@material-ui/styles';
-
-const darkGray = '#292c33';
-const darkerGray = '#141414';
-
-const theme = createMuiTheme({
-  palette: {
-    primary: {
-      main: darkGray,
-      dark: darkerGray,
-    },
-    secondary: {
-      main: '#ffffff',
-    },
-    background: {
-      default: darkGray,
-      paper: darkGray,
-    }
-  },
-  typography: {
-    fontFamily: "'Work Sans', sans-serif",
-  },
-});
+import { darkTheme } from './theme';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -63,7 +42,7 @@ const App: React.FC = () => {
   const classes = useStyles();
 
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={darkTheme}>
       <CssBaseline />
       <div className={classes.App}>
         <header className={classes.AppHeader}>
