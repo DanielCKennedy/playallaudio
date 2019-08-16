@@ -1,4 +1,5 @@
-import { PlayerState, PlayerEffect, Track } from "../types/playerTypes";
+import { PlayerState, PlayerEffect, Track, PlayerActualState } from "../types/playerTypes";
+import { emptyPlayerActualState } from "../constants/playerConstants";
 
 /**
  * Returns a PlayerState with an updated request field.
@@ -38,7 +39,10 @@ const setTrack = (state: PlayerState, track: Track) => {
       ...state.queue,
       track: track,
     },
-    position: 0,
+    player: {
+      ...state.player,
+      position: 0,
+    }
   }
 };
 
@@ -183,3 +187,25 @@ export const prev = (state: PlayerState) => {
     return loopAndStartPrev(state);
   }
 };
+
+/**
+ * Sets the PlayerActualState
+ * 
+ * @param state PlayerState
+ * @param playerState PlayerActualState
+ * @returns PlayerState
+ */
+export const setPlayerState = (state: PlayerState, playerState?: PlayerActualState) => {
+  if (playerState) {
+    return {
+      ...state,
+      player: playerState,
+    };
+  }
+  else {
+    return {
+      ...state,
+      player: emptyPlayerActualState,
+    }
+  }
+}

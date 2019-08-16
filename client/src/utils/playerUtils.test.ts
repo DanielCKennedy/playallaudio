@@ -1,15 +1,20 @@
-import { requestPlayerEffect, addToQueue, next, prev } from "./playerUtils";
-import { mockPlayerState, emptyPlayerState, mockTrack1, mockTrack2, mockTrack3 } from "../mocks/playerMocks";
+import { requestPlayerEffect, addToQueue, next, prev, setPlayerState } from "./playerUtils";
+import { mockPlayerState, mockTrack1, mockTrack2, mockTrack3 } from "../mocks/playerMocks";
+import { emptyPlayerState, emptyPlayerActualState } from "../constants/playerConstants";
+import { PlayerActualState } from "../types/playerTypes";
 
 /* requestPlayerEffect */
 it("requestPlayerEffect only updates the PlayerState's request field", () => {
   const initialState = mockPlayerState;
   const state = requestPlayerEffect(initialState, 'PLAY');
 
-  expect(state.queue).toEqual(initialState.queue);
-  expect(state.position).toEqual(initialState.position);
-  expect(state.request.effect).toEqual('PLAY');
-  expect(state.request.seekPos).toEqual(undefined);
+  expect(state).toEqual({
+    ...initialState,
+    request: {
+      effect: 'PLAY',
+      seekPos: undefined
+    }
+  });
 });
 
 it("requestPlayerEffect gives the request's seekPos field if a seek command", () => {
@@ -17,17 +22,23 @@ it("requestPlayerEffect gives the request's seekPos field if a seek command", ()
 
   // set seekPos
   const seekState = requestPlayerEffect(initialState, 'SEEK', 5);
-  expect(seekState.queue).toEqual(initialState.queue);
-  expect(seekState.position).toEqual(initialState.position);
-  expect(seekState.request.effect).toEqual('SEEK');
-  expect(seekState.request.seekPos).toEqual(5);
+  expect(seekState).toEqual({
+    ...initialState,
+    request: {
+      effect: 'SEEK',
+      seekPos: 5
+    }
+  });
 
   // should reset seekPos to undefined
   const state = requestPlayerEffect(seekState, 'PLAY');
-  expect(state.queue).toEqual(initialState.queue);
-  expect(state.position).toEqual(initialState.position);
-  expect(state.request.effect).toEqual('PLAY');
-  expect(state.request.seekPos).toEqual(undefined);
+  expect(state).toEqual({
+    ...seekState,
+    request: {
+      effect: 'PLAY',
+      seekPos: undefined
+    }
+  });
 });
 
 it("requestPlayerEffect resets the request if effect not given", () => {
@@ -260,5 +271,31 @@ it("prev puts current track to beginning of next queue", () => {
       effect: "START",
       seekPos: undefined,
     }
+  });
+});
+
+/* setPlayerState */
+it("setPlayerState should set player if present", () => {
+  const initialState = mockPlayerState;
+  const player: PlayerActualState = {
+    position: 5,
+    isPlaying: true,
+  };
+  const state = setPlayerState(initialState, player);
+
+  expect(state).toEqual({
+    ...initialState,
+    player: player,
+  });
+});
+
+it("setPlayerState should set an empty player if player not present", () => {
+  const initialState = mockPlayerState;
+  const player = undefined;
+  const state = setPlayerState(initialState, player);
+
+  expect(state).toEqual({
+    ...initialState,
+    player: emptyPlayerActualState,
   });
 });

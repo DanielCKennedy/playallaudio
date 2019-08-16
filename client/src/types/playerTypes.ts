@@ -1,5 +1,5 @@
 export enum TrackSource {
-  EMPTY = 'empty',
+  SOUNDCLOUD = 'soundcloud'
 };
 
 export type TrackDetails = {
@@ -34,9 +34,14 @@ export type PlayerRequest = {
   seekPos?: number,
 };
 
+export type PlayerActualState = {
+  position: number,
+  isPlaying: boolean,
+}
+
 export type PlayerState = {
   queue: Queue,
-  position: number,
+  player: PlayerActualState,
   request: PlayerRequest,
 };
 
@@ -47,10 +52,12 @@ export type PlayerActionType =
   'PREV' |
   'SEEK' |
   'ADD_TO_QUEUE' |
+  'SET_PLAYER_STATE' |
   'RESET_REQUEST';
 
 export type PlayerAction = {
   type: PlayerActionType,
   track?: Track,
   position?: number,
+  player?: PlayerActualState,
 };

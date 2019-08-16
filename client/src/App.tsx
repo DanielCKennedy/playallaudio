@@ -3,6 +3,8 @@ import logo from './logo.svg';
 import { CssBaseline, Theme } from '@material-ui/core';
 import { ThemeProvider, makeStyles, createStyles } from '@material-ui/styles';
 import { darkTheme } from './theme';
+import PlayallPlayer from './components/PlayallPlayer';
+import TestComponent from './components/TestComponent';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -44,22 +46,25 @@ const App: React.FC = () => {
   return (
     <ThemeProvider theme={darkTheme}>
       <CssBaseline />
-      <div className={classes.App}>
-        <header className={classes.AppHeader}>
-          <img src={logo} className={classes.AppLogo} alt="logo" />
-          <p>
-            Edit <code>src/App.tsx</code> and save to reload.
-          </p>
-          <a
-            className={classes.AppLink}
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
+      <PlayallPlayer soundcloudClientId={process.env.REACT_APP_SOUNDCLOUD_CLIENT_ID}>
+        <div className={classes.App}>
+          <header className={classes.AppHeader}>
+            <img src={logo} className={classes.AppLogo} alt="logo" />
+            <p>
+              Edit <code>src/App.tsx</code> and save to reload.
+            </p>
+            <TestComponent />
+            <a
+              className={classes.AppLink}
+              href="https://reactjs.org"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Learn React
+            </a>
+          </header>
+        </div>
+      </PlayallPlayer>
     </ThemeProvider>
   );
 }

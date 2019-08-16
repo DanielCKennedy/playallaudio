@@ -1,25 +1,12 @@
 import { PlayerState, TrackDetails, TrackSource, Track } from "../types/playerTypes";
 
-export const emptyPlayerState: PlayerState = {
-  queue: {
-    track: undefined,
-    prev: [],
-    next: []
-  },
-  position: 0,
-  request: {
-    effect: undefined,
-    seekPos: undefined,
-  },
-};
-
 export const mockTrackDetails: TrackDetails = {
   id: "1",
   title: "title",
   artists: ["artist1", "artist2"],
   duration: 123456,
   artwork: "artworkUrl",
-  source: TrackSource.EMPTY,
+  source: TrackSource.SOUNDCLOUD,
   externalUrl: "externalUrl",
 };
 
@@ -44,7 +31,10 @@ export const mockPlayerState: PlayerState = {
     prev: [mockTrack2],
     next: [mockTrack3]
   },
-  position: 0,
+  player: {
+    position: 12,
+    isPlaying: false,
+  },
   request: {
     effect: undefined,
     seekPos: undefined,

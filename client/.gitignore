@@ -25,3 +25,6 @@ yarn-error.log*
 # editors
 .idea
 .vscode
+
+# environment variables
+.env
