@@ -214,4 +214,30 @@ export const setPlayerState = (state: PlayerState, playerState?: PlayerActualSta
       player: emptyPlayerActualState,
     }
   }
-}
+};
+
+/**
+ * Seeks to the requested position if within bounds of the track's duration.
+ * 
+ * @param state PlayerState
+ * @param position number (in milliseconds) to seek to
+ * @param relative boolean whether position is relative or absolute
+ * @returns PlayerState
+ */
+export const seek = (state: PlayerState, position?: number, relative?: boolean) => {
+  if (position && state.queue.track) {
+    const pos = relative ? state.player.position + position : position;
+    if (pos < 0) {
+      return prev(state);
+    }
+    else if (pos > state.queue.track.details.duration) {
+      return next(state);
+    }
+    else {
+      return requestPlayerEffect(state, 'SEEK', pos);
+    }
+  }
+  else {
+    return state;
+  }
+};

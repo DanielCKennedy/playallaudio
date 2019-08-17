@@ -1,4 +1,4 @@
-import { requestPlayerEffect, addToQueue, next, prev, setPlayerState } from "./playerUtils";
+import { requestPlayerEffect, addToQueue, next, prev, setPlayerState, seek } from "./playerUtils";
 import { mockPlayerState, mockTrack1, mockTrack2, mockTrack3 } from "../mocks/playerMocks";
 import { emptyPlayerState, emptyPlayerActualState } from "../constants/playerConstants";
 import { PlayerActualState } from "../types/playerTypes";
@@ -320,4 +320,85 @@ it("setPlayerState should call next when isDone = true", () => {
   const state = setPlayerState(initialState, player);
 
   expect(state).toEqual(nextState);
-})
+});
+
+/* seek */
+it("seek requests a seek effect if position is less than track duration", () => {
+  const initialState = {
+    ...emptyPlayerState,
+    queue: {
+      ...emptyPlayerState.queue,
+      track: {
+        ...mockTrack1,
+        duration: 5000
+      }
+    },
+    player: {
+      ...emptyPlayerState.player,
+      position: 1000,
+    }
+  };
+  const position = 4000;
+  const relative = undefined;
+  const state = seek(initialState, position, relative);
+
+  expect(state).toEqual({
+    ...initialState,
+    request: {
+      effect: 'SEEK',
+      seekPos: position
+    }
+  });
+});
+
+it("seek plays prev if position < 0", () => {
+  const initialState = {
+    ...emptyPlayerState,
+    queue: {
+      ...emptyPlayerState.queue,
+      track: {
+        ...mockTrack1,
+        details: {
+          ...mockTrack1.details,
+          duration: 5000
+        }
+      }
+    },
+    player: {
+      ...emptyPlayerState.player,
+      position: 1000,
+    }
+  };
+  const prevState = prev(initialState);
+  const position = -5000;
+  const relative = true;
+  const state = seek(initialState, position, relative);
+
+  expect(state).toEqual(prevState);
+});
+
+it("seek plays next if position > duration", () => {
+  const initialState = {
+    ...emptyPlayerState,
+    queue: {
+      ...emptyPlayerState.queue,
+      track: {
+        ...mockTrack1,
+        details: {
+          ...mockTrack1.details,
+          duration: 5000
+        }
+      }
+    },
+    player: {
+      ...emptyPlayerState.player,
+      position: 1000,
+    }
+  };
+  const nextState = next(initialState);
+  const position = 12000;
+  const relative = true;
+  const state = seek(initialState, position, relative);
+
+  expect(state).toEqual(nextState);
+});

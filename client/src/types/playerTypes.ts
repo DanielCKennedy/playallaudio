@@ -60,5 +60,6 @@ export type PlayerAction = {
   type: PlayerActionType,
   track?: Track,
   position?: number,
+  relative?: boolean,
   player?: PlayerActualState,
 };
