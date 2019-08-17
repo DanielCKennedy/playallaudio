@@ -24,7 +24,7 @@
     ]
   },
   "include": [
-    "src", "../TestComponent1.tsx", "../PlayallPlayer.test.tsx", "../PlayallPlayer copy.tsx"
+    "src"
   ],
   "exclude": [
     "node_modules",
