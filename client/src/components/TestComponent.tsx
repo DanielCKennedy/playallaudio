@@ -20,12 +20,23 @@ const trackDetails: TrackDetails = {
   externalUrl: "",
 }
 
+const trackDetails2: TrackDetails = {
+  id: "286867778",
+  title: "Keep It Mello - Marshmello",
+  artists: ["NightMair"],
+  duration: 247219,
+  artwork: "https://i1.sndcdn.com/artworks-000187416940-d53jue-crop.jpg",
+  source: TrackSource.SOUNDCLOUD,
+  externalUrl: ""
+}
+
 const TestComponent: React.FC = () => {
   const playerDispatch = useContext(PlayerDispatchContext);
 
   return (
     <React.Fragment>
       <button onClick={() => playerDispatch({ type: 'ADD_TO_QUEUE', track: createTrack(trackDetails) })}>Add to queue</button>
+      <button onClick={() => playerDispatch({ type: 'ADD_TO_QUEUE', track: createTrack(trackDetails2) })}>Add other to queue</button>
       <button onClick={() => playerDispatch({ type: 'PLAY' })}>PLAY</button>
       <button onClick={() => playerDispatch({ type: 'PAUSE' })}>PAUSE</button>
       <button onClick={() => playerDispatch({ type: 'NEXT' })}>NEXT</button>

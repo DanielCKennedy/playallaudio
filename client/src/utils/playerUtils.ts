@@ -111,7 +111,7 @@ const loopQueues = (state: PlayerState) => {
 const loopAndStartNext = (state: PlayerState) => {
   if (state.queue.track) {
     var prevQueue = state.queue.prev.map((val) => val);
-    prevQueue.push(state.queue.track);
+    prevQueue.unshift(state.queue.track);
     return startNext(loopQueues({
       ...state,
       queue: {
@@ -127,7 +127,7 @@ const loopAndStartNext = (state: PlayerState) => {
 const loopAndStartPrev = (state: PlayerState) => {
   if (state.queue.track) {
     var nextQueue = state.queue.next.map((val) => val);
-    nextQueue.push(state.queue.track);
+    nextQueue.unshift(state.queue.track);
     return startPrev(loopQueues({
       ...state,
       queue: {
