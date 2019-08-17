@@ -3,6 +3,7 @@ import { PlayerActualState, PlayerState } from "../types/playerTypes";
 export const emptyPlayerActualState: PlayerActualState = {
   position: 0,
   isPlaying: false,
+  isDone: false,
 }
 
 export const emptyPlayerState: PlayerState = {

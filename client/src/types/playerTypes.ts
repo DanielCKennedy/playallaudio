@@ -37,6 +37,7 @@ export type PlayerRequest = {
 export type PlayerActualState = {
   position: number,
   isPlaying: boolean,
+  isDone: boolean,
 }
 
 export type PlayerState = {

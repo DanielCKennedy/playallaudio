@@ -35,40 +35,43 @@ const PlayallPlayer: React.FC<PlayallPlayerProps> = ( { soundcloudClientId, chil
     });
   }
 
+  // Initialize soundcloud player
   useEffect(() => {
-    console.log(soundcloudClientId);
     if (soundcloudClientId && !players[TrackSource.SOUNDCLOUD].isEnabled) {
-      console.log(soundcloudClientId)
       players[TrackSource.SOUNDCLOUD].init(soundcloudClientId);
     }
   }, [soundcloudClientId]);
 
+  // Handle player effect requests
   useEffect(() => {
     if (playerState.queue.track && players[playerState.queue.track.details.source].isEnabled) {
       const request = playerState.request;
       const source = playerState.queue.track.details.source;
-      playerDispatch({ type: 'RESET_REQUEST' });
-      switch (request.effect) {
-        case 'START':
-          handlePlayerCommand(players[source].start(playerState.queue.track));
-          break;
-        case 'PLAY':
-          handlePlayerCommand(players[source].play());
-          break;
-        case 'PAUSE':
-            handlePlayerCommand(players[source].pause());
-          break;
-        case 'SEEK':
-          if (request.seekPos) {
-            handlePlayerCommand(players[source].seek(request.seekPos));
-          }
-          break;         
-        default:
-          break;
+      if (request.effect !== undefined) {
+        playerDispatch({ type: 'RESET_REQUEST' });
+        switch (request.effect) {
+          case 'START':
+            handlePlayerCommand(players[source].start(playerState.queue.track));
+            break;
+          case 'PLAY':
+            handlePlayerCommand(players[source].play());
+            break;
+          case 'PAUSE':
+              handlePlayerCommand(players[source].pause());
+            break;
+          case 'SEEK':
+            if (request.seekPos) {
+              handlePlayerCommand(players[source].seek(request.seekPos));
+            }
+            break;         
+          default:
+            break;
+        }
       }
     }
   }, [playerState.request, playerState.queue.track]);
 
+  // Get updated player state while track is playing
   useEffect(() => {
     if (playerState.player.isPlaying && playerState.queue.track && players[playerState.queue.track.details.source].isEnabled) {
       const source = playerState.queue.track.details.source;

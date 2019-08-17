@@ -42,8 +42,9 @@ const setTrack = (state: PlayerState, track: Track) => {
     player: {
       ...state.player,
       position: 0,
+      isDone: false,
     }
-  }
+  };
 };
 
 const startTrack = (state: PlayerState, track: Track) => {
@@ -65,7 +66,7 @@ const startNext = (state: PlayerState) => {
         track: undefined,
         next: nextQueue,
         prev: prevQueue,
-      }
+      },
     }, nextTrack);
   }
   return state;
@@ -197,10 +198,15 @@ export const prev = (state: PlayerState) => {
  */
 export const setPlayerState = (state: PlayerState, playerState?: PlayerActualState) => {
   if (playerState) {
-    return {
-      ...state,
-      player: playerState,
-    };
+    if (playerState.isDone) {
+      return next(state);
+    }
+    else {
+      return {
+        ...state,
+        player: playerState,
+      };
+    }
   }
   else {
     return {

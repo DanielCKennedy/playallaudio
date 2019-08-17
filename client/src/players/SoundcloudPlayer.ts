@@ -1,7 +1,6 @@
 import Player from "./Player";
 import SoundCloud from 'soundcloud';
 import { Track, PlayerActualState } from "../types/playerTypes";
-import { emptyPlayerActualState } from "../constants/playerConstants";
 
 const createPromiseState = (state: PlayerActualState) => {
   return new Promise<PlayerActualState>((resolve) => {
@@ -33,6 +32,11 @@ class SoundcloudPlayer implements Player {
         .then((player: SoundCloud.Player) => {
           this.soundcloudPlayer = player;
           this.soundcloudPlayer.play();
+          this.soundcloudPlayer.on('finish', () => {
+            if (this.soundcloudPlayer) {
+              this.soundcloudPlayer.kill();
+            }
+          });
           return this.getState();
         });
     }
@@ -95,7 +99,11 @@ class SoundcloudPlayer implements Player {
     if (this.isEnabled && this.soundcloudPlayer) {
       this.soundcloudPlayer.kill();
       return new Promise((resolve) => {
-        return resolve(emptyPlayerActualState);
+        return resolve({
+          position: 0,
+          isPlaying: false,
+          isDone: true,
+        });
       });
     }
     else {
@@ -112,12 +120,16 @@ class SoundcloudPlayer implements Player {
           return createPromiseState({
             position: position,
             isPlaying: true,
+            isDone: false,
           });
-        case "paused" || "ended" || "loading":
+        case "paused" || "loading":
           return createPromiseState({
             position: position,
             isPlaying: false,
+            isDone: false,
           });
+        case "ended":
+          return this.stop();
         default:
           return this.stop();
       }

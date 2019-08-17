@@ -34,6 +34,7 @@ export const mockPlayerState: PlayerState = {
   player: {
     position: 12,
     isPlaying: false,
+    isDone: false,
   },
   request: {
     effect: undefined,

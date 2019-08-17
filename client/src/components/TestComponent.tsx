@@ -30,6 +30,7 @@ const TestComponent: React.FC = () => {
       <button onClick={() => playerDispatch({ type: 'PAUSE' })}>PAUSE</button>
       <button onClick={() => playerDispatch({ type: 'NEXT' })}>NEXT</button>
       <button onClick={() => playerDispatch({ type: 'PREV' })}>PREV</button>
+      <button onClick={() => playerDispatch({ type: 'SEEK', position: 186000 })}>SEEK</button>
     </React.Fragment>
   );
 }

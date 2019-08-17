@@ -280,6 +280,7 @@ it("setPlayerState should set player if present", () => {
   const player: PlayerActualState = {
     position: 5,
     isPlaying: true,
+    isDone: false,
   };
   const state = setPlayerState(initialState, player);
 
@@ -299,3 +300,24 @@ it("setPlayerState should set an empty player if player not present", () => {
     player: emptyPlayerActualState,
   });
 });
+
+it("setPlayerState should call next when isDone = true", () => {
+  const initialState = {
+    ...emptyPlayerState,
+    queue: {
+      ...emptyPlayerState.queue,
+      track: mockTrack1,
+      next: [mockTrack2],
+      prev: [mockTrack3]
+    }
+  };
+  const player: PlayerActualState = {
+    position: 5,
+    isPlaying: false,
+    isDone: true,
+  };
+  const nextState = next(initialState);
+  const state = setPlayerState(initialState, player);
+
+  expect(state).toEqual(nextState);
+})
