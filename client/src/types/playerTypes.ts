@@ -63,3 +63,8 @@ export type PlayerAction = {
   relative?: boolean,
   player?: PlayerActualState,
 };
+
+export type Progress = {
+  position: number,
+  duration: number,
+}

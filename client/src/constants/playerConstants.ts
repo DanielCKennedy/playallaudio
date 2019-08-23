@@ -1,4 +1,4 @@
-import { PlayerActualState, PlayerState } from "../types/playerTypes";
+import { PlayerActualState, PlayerState, Progress } from "../types/playerTypes";
 
 export const emptyPlayerActualState: PlayerActualState = {
   position: 0,
@@ -18,3 +18,8 @@ export const emptyPlayerState: PlayerState = {
     seekPos: undefined,
   },
 };
+
+export const emptyProgress: Progress = {
+  position: 0,
+  duration: 0,
+}

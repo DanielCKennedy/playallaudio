@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import { PlayerDispatchContext } from './PlayallPlayer';
 import { TrackDetails, TrackSource } from '../types/playerTypes';
 import uuid from 'uuid';
+import ProgressSlider from './ProgressSlider';
 
 const createTrack = (trackDetails: TrackDetails) => {
   return {
@@ -44,6 +45,7 @@ const TestComponent: React.FC = () => {
       <button onClick={() => playerDispatch({ type: 'SEEK', position: 30000, relative: true })}>FORWARD</button>
       <button onClick={() => playerDispatch({ type: 'SEEK', position: -15000, relative: true })}>BACKWARDS</button>
       <button onClick={() => playerDispatch({ type: 'SEEK', position: 186000 })}>SEEK</button>
+      <ProgressSlider />
     </React.Fragment>
   );
 }
