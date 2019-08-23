@@ -1,12 +1,13 @@
-import React, { useEffect, useReducer } from 'react';
+import React, { useEffect, useReducer, useState } from 'react';
 import SoundCloud from 'soundcloud';
 import playerReducer from '../reducers/playerReducer';
 import Player from '../players/Player';
 import SoundcloudPlayer from '../players/SoundcloudPlayer';
-import { PlayerAction, TrackSource, PlayerActualState } from '../types/playerTypes';
-import { emptyPlayerState } from '../constants/playerConstants';
+import { PlayerAction, TrackSource, PlayerActualState, Progress } from '../types/playerTypes';
+import { emptyPlayerState, emptyProgress } from '../constants/playerConstants';
 
 export const PlayerDispatchContext = React.createContext<React.Dispatch<PlayerAction>>((playerAction: PlayerAction) => {});
+export const ProgressContext = React.createContext<Progress>(emptyProgress);
 
 type PlayallPlayerProps = {
   soundcloudClientId?: string,
@@ -24,6 +25,7 @@ var interval: NodeJS.Timeout;
 
 const PlayallPlayer: React.FC<PlayallPlayerProps> = ( { soundcloudClientId, children } ) => {
   const [playerState, playerDispatch] = useReducer(playerReducer, emptyPlayerState);
+  const [progress, setProgress] = useState<Progress>(emptyProgress);
   
   const handlePlayerCommand = (playerPromise: Promise<PlayerActualState>) => {
     playerPromise.then((state: PlayerActualState) => {
@@ -85,9 +87,24 @@ const PlayallPlayer: React.FC<PlayallPlayerProps> = ( { soundcloudClientId, chil
     }
   }, [playerState.player.isPlaying, playerState.queue.track]);
 
+  // Update progress
+  useEffect(() => {
+    if (playerState.queue.track) {
+      setProgress({
+        position: playerState.player.position,
+        duration: playerState.queue.track.details.duration,
+      });
+    }
+    else {
+      setProgress(emptyProgress);
+    }
+  }, [playerState.player.position, playerState.queue.track]);
+
   return (
     <PlayerDispatchContext.Provider value={playerDispatch}>
-      {children}
+      <ProgressContext.Provider value={progress}>
+        {children}
+      </ProgressContext.Provider>
     </PlayerDispatchContext.Provider>
   );
 }
