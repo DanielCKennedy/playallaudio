@@ -4,6 +4,7 @@ import { TrackDetails, TrackSource } from '../types/playerTypes';
 import ProgressSlider from './ProgressSlider';
 import { createTrack } from '../utils/trackUtils';
 import ProgressTime from './ProgressTime';
+import NowPlaying from './NowPlaying';
 
 const trackDetails: TrackDetails = {
   id: "281996914",
@@ -41,6 +42,7 @@ const TestComponent: React.FC = () => {
       <button onClick={() => playerDispatch({ type: 'SEEK', position: 186000 })}>SEEK</button>
       <ProgressSlider />
       <ProgressTime />
+      <NowPlaying />
     </React.Fragment>
   );
 }

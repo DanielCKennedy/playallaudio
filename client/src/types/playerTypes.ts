@@ -1,4 +1,5 @@
 export enum TrackSource {
+  EMPTY = 'empty',
   SOUNDCLOUD = 'soundcloud'
 };
 

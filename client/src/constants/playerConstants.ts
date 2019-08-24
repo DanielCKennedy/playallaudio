@@ -1,4 +1,14 @@
-import { PlayerActualState, PlayerState, Progress } from "../types/playerTypes";
+import { PlayerActualState, PlayerState, Progress, TrackDetails, TrackSource } from "../types/playerTypes";
+
+export const emptyTrackDetails: TrackDetails = {
+  id: "",
+  title: "",
+  artists: [],
+  duration: 0,
+  artwork: "",
+  source: TrackSource.EMPTY,
+  externalUrl: "",
+}
 
 export const emptyPlayerActualState: PlayerActualState = {
   position: 0,
