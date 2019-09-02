@@ -15,17 +15,16 @@ export const darkTheme = responsiveFontSizes(createMuiTheme({
     background: {
       default: darkGray,
       paper: darkGray,
+    },
+    text: {
+      primary: "#fff"
     }
   },
   typography: {
-    fontFamily: "'Work Sans', sans-serif",
+    fontFamily: "sans-serif",
     h1: {
       fontFamily: "'Raleway', sans-serif",
       fontWeight: 500,
-    },
-    h4: {
-      fontFamily: "sans-serif",
-      fontWeight: 400,
     },
   },
 }));
