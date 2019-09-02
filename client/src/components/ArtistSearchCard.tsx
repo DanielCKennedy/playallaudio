@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme: Theme) =>
       background: `linear-gradient(${props.color}, black)`,
       borderRadius: 0,
       display: 'inline-block',
-      width: '13vw',
+      width: '15vw',
       minWidth: '220px'
     }),
   }),
