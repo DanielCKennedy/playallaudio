@@ -1,44 +1,39 @@
 import React from 'react';
-import logo from './logo.svg';
-import { CssBaseline, Theme } from '@material-ui/core';
+import { CssBaseline, Theme, Container } from '@material-ui/core';
 import { ThemeProvider, makeStyles, createStyles } from '@material-ui/styles';
 import { darkTheme } from './theme';
 import PlayallPlayer from './components/PlayallPlayer';
-import TestComponent from './components/TestComponent';
+import LandingHeader from './components/LandingHeader';
+import HomeContent from './components/HomeContent';
+
+const bottomBarHeight = 90;
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    App: {
-      textAlign: 'center',
-    },
-    AppLogo: {
-      animation: '$AppLogoSpin infinite 20s linear',
-      height: '40vmin',
-      pointerEvents: 'none',
-    },
-    AppHeader: {
-      backgroundColor: '#282c34',
-      minHeight: '100vh',
+    app: {
+      width: '100vw',
+      height: '100vh',
+      overflow: 'hidden',
       display: 'flex',
       flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'center',
-      fontSize: 'calc(10px + 2vmin)',
-      color: 'white',
     },
-    AppLink: {
-      color: '#61dafb',
+    mainArea: {
+      width: '100%',
+      height: `calc(100% - ${bottomBarHeight}px)`,
+      overflowX: 'hidden',
+      overflowY: 'auto',
     },
-    '@keyframes AppLogoSpin': {
-      from: {
-        transform: 'rotate(0deg)',
-      },
-      to: {
-        transform: 'rotate(360deg)',
-      },
-    }
+    bottomBar: {
+      width: '100%',
+      height: `${bottomBarHeight}px!important`,
+      backgroundColor: 'white',
+      position: "absolute",
+      bottom: 0,
+    },
   })
 );
+
+const SOUNDCLOUD_CLIENT_ID = process.env.REACT_APP_SOUNDCLOUD_CLIENT_ID;
 
 const App: React.FC = () => {
   const classes = useStyles();
@@ -46,23 +41,16 @@ const App: React.FC = () => {
   return (
     <ThemeProvider theme={darkTheme}>
       <CssBaseline />
-      <PlayallPlayer soundcloudClientId={process.env.REACT_APP_SOUNDCLOUD_CLIENT_ID}>
-        <div className={classes.App}>
-          <header className={classes.AppHeader}>
-            <img src={logo} className={classes.AppLogo} alt="logo" />
-            <p>
-              Edit <code>src/App.tsx</code> and save to reload.
-            </p>
-            <TestComponent />
-            <a
-              className={classes.AppLink}
-              href="https://reactjs.org"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learn React
-            </a>
-          </header>
+      <PlayallPlayer soundcloudClientId={SOUNDCLOUD_CLIENT_ID}>
+        <div className={classes.app}>
+          <div className={classes.mainArea}>
+            <LandingHeader />
+            <Container maxWidth="xl">
+              <HomeContent />
+            </Container>
+          </div>
+          <footer className={classes.bottomBar}>
+          </footer>
         </div>
       </PlayallPlayer>
     </ThemeProvider>
