@@ -30,7 +30,6 @@ const useStyles = makeStyles((theme: Theme) =>
         display: 'none',
       },
     },
-    
     img: {
       height: height,
       width: 'auto',
@@ -68,15 +67,15 @@ const PlaylistList: React.FC<PlaylistListProps> = ({ name }) => {
 
   const scrollLeft = () => {
     const gridList = ref.current;
-    if (gridList) {
-      gridList.scrollLeft -= height;
+    if (gridList && gridList.parentElement) {
+      gridList.scrollLeft -= gridList.parentElement.scrollWidth;
     }
   };
 
   const scrollRight = () => {
     const gridList = ref.current;
-    if (gridList) {
-      gridList.scrollLeft += height;
+    if (gridList && gridList.parentElement) {
+      gridList.scrollLeft += gridList.parentElement.scrollWidth;
     }
   };
 
