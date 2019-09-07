@@ -1,15 +1,8 @@
 import React, { useContext } from 'react';
 import { PlayerDispatchContext } from './PlayallPlayer';
 import { TrackDetails, TrackSource } from '../types/playerTypes';
-import uuid from 'uuid';
 import ProgressSlider from './ProgressSlider';
-
-const createTrack = (trackDetails: TrackDetails) => {
-  return {
-    id: uuid(),
-    details: trackDetails
-  };
-}
+import { createTrack } from '../utils/trackUtils';
 
 const trackDetails: TrackDetails = {
   id: "281996914",

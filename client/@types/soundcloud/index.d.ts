@@ -77,6 +77,8 @@ declare module 'soundcloud' {
         username: string;
         permalink: string;
         last_modified: string;
+        track_count: number;
+        followers_count: number;
       }
     
       interface Track {

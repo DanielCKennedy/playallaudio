@@ -1,4 +1,4 @@
-import { PlayerState, PlayerEffect, Track, PlayerActualState } from "../types/playerTypes";
+import { PlayerState, PlayerEffect, Track, PlayerActualState, Queue } from "../types/playerTypes";
 import { emptyPlayerActualState } from "../constants/playerConstants";
 
 /**
@@ -158,6 +158,28 @@ export const addToQueue = (state: PlayerState, track?: Track) => {
   }
   return state;
 };
+
+/**
+ * Sets the queue and starts playing
+ * 
+ * @param state PlayerState
+ * @param queue Queue
+ * @returns PlayerState
+ */
+export const setQueue = (state: PlayerState, queue?: Queue) => {
+  if (queue) {
+    return requestPlayerEffect({
+      ...state,
+      queue: queue,
+      player: {
+        ...state.player,
+        position: 0,
+        isDone: false,
+      }
+    }, 'START');
+  }
+  return state;
+}
 
 /**
  * Plays the next track in the queue.

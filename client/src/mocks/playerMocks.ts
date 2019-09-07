@@ -1,4 +1,4 @@
-import { PlayerState, TrackDetails, TrackSource, Track } from "../types/playerTypes";
+import { PlayerState, TrackDetails, TrackSource, Track, Queue } from "../types/playerTypes";
 
 export const mockTrackDetails: TrackDetails = {
   id: "1",
@@ -25,12 +25,14 @@ export const mockTrack3: Track = {
   details: mockTrackDetails,
 };
 
+export const mockQueue: Queue = {
+  track: mockTrack1,
+  prev: [mockTrack2],
+  next: [mockTrack3]
+}
+
 export const mockPlayerState: PlayerState = {
-  queue: {
-    track: mockTrack1,
-    prev: [mockTrack2],
-    next: [mockTrack3]
-  },
+  queue: mockQueue,
   player: {
     position: 12,
     isPlaying: false,

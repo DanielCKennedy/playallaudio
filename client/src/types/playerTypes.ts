@@ -17,6 +17,13 @@ export type Track = {
   details: TrackDetails,
 };
 
+export type Artist = {
+  id: string,
+  name: string,
+  artwork: string,
+  source: TrackSource,
+}
+
 export type Queue = {
   track?: Track,
   prev: Track[],
@@ -53,12 +60,14 @@ export type PlayerActionType =
   'PREV' |
   'SEEK' |
   'ADD_TO_QUEUE' |
+  'SET_QUEUE' |
   'SET_PLAYER_STATE' |
   'RESET_REQUEST';
 
 export type PlayerAction = {
   type: PlayerActionType,
   track?: Track,
+  queue?: Queue,
   position?: number,
   relative?: boolean,
   player?: PlayerActualState,
@@ -67,4 +76,4 @@ export type PlayerAction = {
 export type Progress = {
   position: number,
   duration: number,
-}
+};
