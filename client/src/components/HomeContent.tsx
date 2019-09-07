@@ -2,6 +2,7 @@ import React from 'react';
 import { Typography, makeStyles, Theme, createStyles } from '@material-ui/core';
 import ArtistSearchCard from './ArtistSearchCard';
 import PlaylistList from './PlaylistList';
+import Spacer from './Spacer';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -45,9 +46,6 @@ const useStyles = makeStyles((theme: Theme) =>
     subtext: {
       fontFamily: "'Work Sans', sans-serif",
     },
-    spacer: {
-      paddingBottom: theme.spacing(8),
-    }
   }),
 );
 
@@ -102,9 +100,9 @@ const HomeContent: React.FC = () => {
           </li>
         )}
       </ul>
-      <div className={classes.spacer} />
+      <Spacer />
       <PlaylistList title="Featured" />
-      <div className={classes.spacer} />
+      <Spacer />
     </React.Fragment>
   );
 };

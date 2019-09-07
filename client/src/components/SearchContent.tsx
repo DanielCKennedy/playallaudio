@@ -2,8 +2,10 @@ import React, { useState, useEffect, useRef } from 'react';
 import SearchRoundedIcon from '@material-ui/icons/SearchRounded';
 import { TextField, makeStyles, Theme, createStyles } from '@material-ui/core';
 import SoundCloud from 'soundcloud';
-import { Artist, TrackSource } from '../types/playerTypes';
+import { Artist, TrackSource, TrackDetails } from '../types/playerTypes';
 import ArtistList from './ArtistList';
+import Spacer from './Spacer';
+import TrackList from './TrackList';
 
 const searchHeight = 100;
 
@@ -21,9 +23,6 @@ const useStyles = makeStyles((theme: Theme) =>
       top: 10,
       marginRight: 5,
     },
-    spacer: {
-      paddingBottom: theme.spacing(8),
-    },
     searchBox: {
       height: searchHeight,
     },
@@ -37,7 +36,9 @@ const SearchContent: React.FC = () => {
   const classes = useStyles();
   const [searchText, setSearchText] = useState("");
   const [artistList, setArtistList] = useState<Artist[]>([]);
-  const lastPromise = useRef();
+  const [trackList, setTrackList] = useState<TrackDetails[]>([]);
+  const lastArtistPromise = useRef();
+  const lastTrackPromise = useRef();
 
   useEffect(() => {
     SOUNDCLOUD_CLIENT_ID && soundcloud.initialize({
@@ -46,17 +47,49 @@ const SearchContent: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    searchText && search(searchText);
+    searchText && searchArtists(searchText);
+    searchText && searchTracks(searchText);
     
   }, [searchText]);
 
-  const search = (query: string) => {
+  const searchTracks = (query: string) => {
+    const currentPromise = soundcloud.get('/tracks', {
+      q: query,
+      limit: 20,
+    });
+    
+    lastTrackPromise.current = currentPromise;
+    
+    currentPromise.then((tracks: SoundCloud.Track[]) => {
+      var trackDetails: TrackDetails[] = [];
+      tracks.map((track: SoundCloud.Track) => {
+        trackDetails.push({
+          id: track.id.toString(),
+          title: track.title,
+          artists: [track.user.username],
+          duration: track.duration,
+          artwork: track.artwork_url,
+          source: TrackSource.SOUNDCLOUD,
+          externalUrl: track.permalink_url,
+        });
+
+        return track;
+      });
+
+      // only update if most recent
+      if (currentPromise === lastTrackPromise.current) {
+        setTrackList(trackDetails);
+      }
+    });
+  }
+
+  const searchArtists = (query: string) => {
     const currentPromise = soundcloud.get('/users', {
       q: query,
       limit: 20,
     });
     
-    lastPromise.current = currentPromise;
+    lastArtistPromise.current = currentPromise;
     
     currentPromise.then((users: SoundCloud.User[]) => {
       var artists: Artist[] = [];
@@ -72,8 +105,8 @@ const SearchContent: React.FC = () => {
         return user;
       });
 
-      // only update if most recent search
-      if (currentPromise === lastPromise.current && artists.length) {
+      // only update if most recent
+      if (currentPromise === lastArtistPromise.current && artists.length) {
         setArtistList(artists);
       }
     });
@@ -91,7 +124,7 @@ const SearchContent: React.FC = () => {
             className={classes.searchBox}
             value={searchText}
             onChange={e => setSearchText(e.target.value)}
-            id="search"
+            id="searchArtists"
             label="Search"
             fullWidth
             autoComplete="off"
@@ -112,9 +145,17 @@ const SearchContent: React.FC = () => {
           />
         </div>
       </div>
-      <div className={classes.spacer} />
-      {artistList.length > 0 && <ArtistList artists={artistList} />}
-      {artistList.length > 0 && <div className={classes.spacer} />}
+      <Spacer />
+      {artistList.length > 0 &&
+      <React.Fragment>
+        <ArtistList artists={artistList} />
+        <Spacer />
+      </React.Fragment>}
+      {trackList.length > 0 &&
+      <React.Fragment>
+        <TrackList title="Tracks" tracks={trackList} />
+        <Spacer />
+      </React.Fragment>}
     </React.Fragment>
   );
 };
