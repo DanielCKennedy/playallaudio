@@ -17,6 +17,13 @@ export type Track = {
   details: TrackDetails,
 };
 
+export type Artist = {
+  id: string,
+  name: string,
+  artwork: string,
+  source: TrackSource,
+}
+
 export type Queue = {
   track?: Track,
   prev: Track[],
@@ -67,4 +74,4 @@ export type PlayerAction = {
 export type Progress = {
   position: number,
   duration: number,
-}
+};

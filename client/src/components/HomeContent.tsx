@@ -103,7 +103,7 @@ const HomeContent: React.FC = () => {
         )}
       </ul>
       <div className={classes.spacer} />
-      <PlaylistList name="Featured" />
+      <PlaylistList title="Featured" />
       <div className={classes.spacer} />
     </React.Fragment>
   );

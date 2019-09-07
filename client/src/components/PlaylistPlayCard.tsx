@@ -29,10 +29,10 @@ const useStyles = makeStyles((theme: Theme) =>
 type PlaylistPlayCardProps = {
   height: string | number,
   url: string,
-  name: string,
+  title: string,
 }
 
-const PlaylistPlayCard: React.FC<PlaylistPlayCardProps> = ({ height, url, name }) => {
+const PlaylistPlayCard: React.FC<PlaylistPlayCardProps> = ({ height, url, title }) => {
   const classes = useStyles();
   const [showPlay, setShowPlay] = useState(false);
   
@@ -41,7 +41,7 @@ const PlaylistPlayCard: React.FC<PlaylistPlayCardProps> = ({ height, url, name }
       <CardActionArea onMouseEnter={() => {setShowPlay(true)}} onMouseLeave={() => {setShowPlay(false)}}>
         <div className={classes.mediaContainer}>
           {showPlay && <PlayArrowRoundedIcon className={classes.playIcon} />}
-          <CardMedia component="img" image={url} title={name} alt={name} height={height} />
+          <CardMedia component="img" image={url} title={title} alt={title} height={height} />
         </div>
       </CardActionArea>
     </Card>

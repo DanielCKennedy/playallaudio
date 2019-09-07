@@ -38,7 +38,8 @@ const useStyles = makeStyles((theme: Theme) =>
       borderRadius: 0,
       display: 'inline-block',
       width: '15vw',
-      minWidth: '220px'
+      minWidth: '220px',
+      maxWidth: '245px',
     }),
   }),
 );
