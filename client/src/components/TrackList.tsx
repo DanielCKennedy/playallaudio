@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { makeStyles, Theme, createStyles, Typography } from '@material-ui/core';
-import { TrackDetails } from '../types/playerTypes';
+import { Track, Queue } from '../types/playerTypes';
 import TrackItem from './TrackItem';
+import { PlayerDispatchContext } from './PlayallPlayer';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -18,11 +19,32 @@ const useStyles = makeStyles((theme: Theme) =>
 
 type TrackListProps = {
   title: string,
-  tracks: TrackDetails[],
+  tracks: Track[],
+}
+
+const createQueue = (findTrack: Track, tracks: Track[]): Queue => {
+  var prevQueue: Track[] = [];
+  var nextQueue: Track[] = [];
+  var track: Track | undefined = undefined;
+
+  const index = tracks.indexOf(findTrack)
+  
+  if (index >= 0 && index < tracks.length) {
+    prevQueue = tracks.slice(0, index);
+    nextQueue = tracks.slice(index + 1, tracks.length);
+    track = tracks[index];
+  }
+
+  return {
+    track: track,
+    prev: prevQueue,
+    next: nextQueue,
+  }
 }
 
 const TrackList: React.FC<TrackListProps> = ({ title, tracks }) => {
   const classes = useStyles();
+  const playerDispatch = useContext(PlayerDispatchContext);
 
   return (
     <div>
@@ -31,9 +53,11 @@ const TrackList: React.FC<TrackListProps> = ({ title, tracks }) => {
       </Typography>
       <div className={classes.listContainer}>
         <ul className={classes.list}>
-          {tracks.map((track: TrackDetails) =>
+          {tracks.map((track: Track) => 
             <li key={track.id}>
-              <TrackItem trackDetails={track} />
+              <TrackItem
+                trackDetails={track.details}
+                onClick={() => playerDispatch({ type: 'SET_QUEUE', queue: createQueue(track, tracks)})} />
             </li>)}
         </ul>
       </div>

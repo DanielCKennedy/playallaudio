@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { TrackDetails } from '../types/playerTypes';
 import { makeStyles, Theme, createStyles, Typography, Button, IconButton } from '@material-ui/core';
 import QueueRoundedIcon from '@material-ui/icons/QueueRounded';
+import { PlayerDispatchContext } from './PlayallPlayer';
+import { createTrack } from '../utils/trackUtils';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -44,20 +46,22 @@ const useStyles = makeStyles((theme: Theme) =>
 
 type TrackItemProps = {
   trackDetails: TrackDetails,
+  onClick: () => void,
 }
 
 type StyleProps = {
   artwork: string,
 }
 
-const TrackItem: React.FC<TrackItemProps> = ({ trackDetails }) => {
+const TrackItem: React.FC<TrackItemProps> = ({ trackDetails, onClick }) => {
   const classes = useStyles({
     artwork: trackDetails.artwork,
   });
+  const playerDispatch = useContext(PlayerDispatchContext);
   
   return (
     <div className={classes.root}>
-      <Button className={classes.flexGrow}>
+      <Button className={classes.flexGrow} onClick={onClick}>
         <div className={classes.verticallyCenter}>
           <div className={classes.artwork} />
         </div>
@@ -74,7 +78,7 @@ const TrackItem: React.FC<TrackItemProps> = ({ trackDetails }) => {
         </div>
       </Button>
       <div className={classes.accessoryContainer}>
-        <IconButton aria-label="Add to queue" color="secondary">
+        <IconButton aria-label="Add to queue" color="secondary" onClick={() => playerDispatch({ type: 'ADD_TO_QUEUE', track: createTrack(trackDetails) })}>
           <QueueRoundedIcon />
         </IconButton>        
       </div>

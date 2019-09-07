@@ -1,5 +1,5 @@
 
-import { requestPlayerEffect, addToQueue, next, prev, setPlayerState, seek } from "../utils/playerUtils";
+import { requestPlayerEffect, addToQueue, next, prev, setPlayerState, seek, setQueue } from "../utils/playerUtils";
 import { PlayerState, PlayerAction } from "../types/playerTypes";
 
 /**
@@ -24,6 +24,8 @@ const playerReducer = (state: PlayerState, action: PlayerAction) => {
       return prev(state);
     case 'ADD_TO_QUEUE':
       return addToQueue(state, action.track);
+    case 'SET_QUEUE':
+      return setQueue(state, action.queue);
     case 'SET_PLAYER_STATE':
       return setPlayerState(state, action.player);
     case 'RESET_REQUEST':

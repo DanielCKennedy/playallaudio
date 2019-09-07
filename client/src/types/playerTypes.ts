@@ -60,12 +60,14 @@ export type PlayerActionType =
   'PREV' |
   'SEEK' |
   'ADD_TO_QUEUE' |
+  'SET_QUEUE' |
   'SET_PLAYER_STATE' |
   'RESET_REQUEST';
 
 export type PlayerAction = {
   type: PlayerActionType,
   track?: Track,
+  queue?: Queue,
   position?: number,
   relative?: boolean,
   player?: PlayerActualState,

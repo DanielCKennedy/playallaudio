@@ -1,5 +1,5 @@
-import { requestPlayerEffect, addToQueue, next, prev, setPlayerState, seek } from "./playerUtils";
-import { mockPlayerState, mockTrack1, mockTrack2, mockTrack3 } from "../mocks/playerMocks";
+import { requestPlayerEffect, addToQueue, next, prev, setPlayerState, seek, setQueue } from "./playerUtils";
+import { mockPlayerState, mockTrack1, mockTrack2, mockTrack3, mockQueue } from "../mocks/playerMocks";
 import { emptyPlayerState, emptyPlayerActualState } from "../constants/playerConstants";
 import { PlayerActualState } from "../types/playerTypes";
 
@@ -131,6 +131,42 @@ it("addToQueue adds to end of next queue", () => {
     }
   });
 });
+
+/* setQueue */
+describe("setQueue", () => {
+  it("returns initial state when no queue given", () => {
+    const initialState = mockPlayerState;
+    const state = setQueue(initialState, undefined);
+
+    expect(state).toEqual(initialState);
+  }),
+
+  it("sets the queue and requests start when queue is given", () => {
+    const initialState = {
+      ...emptyPlayerState,
+      queue: {
+        ...emptyPlayerState.queue,
+        track: mockTrack1,
+        next: [mockTrack2, mockTrack3],
+      }
+    };
+    const state = setQueue(initialState, mockQueue);
+
+    expect(state).toEqual({
+      ...initialState,
+      queue: mockQueue,
+      player: {
+        ...initialState.player,
+        position: 0,
+        isDone: false,
+      },
+      request: {
+        effect: 'START',
+        seekPos: undefined,
+      }
+    });
+  })
+})
 
 /* next */
 it("next starts current track if no queue", () => {

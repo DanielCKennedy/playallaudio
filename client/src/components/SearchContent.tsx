@@ -2,10 +2,11 @@ import React, { useState, useEffect, useRef } from 'react';
 import SearchRoundedIcon from '@material-ui/icons/SearchRounded';
 import { TextField, makeStyles, Theme, createStyles } from '@material-ui/core';
 import SoundCloud from 'soundcloud';
-import { Artist, TrackSource, TrackDetails } from '../types/playerTypes';
+import { Artist, TrackSource, Track } from '../types/playerTypes';
 import ArtistList from './ArtistList';
 import Spacer from './Spacer';
 import TrackList from './TrackList';
+import { createTrack } from '../utils/trackUtils';
 
 const searchHeight = 100;
 
@@ -36,7 +37,7 @@ const SearchContent: React.FC = () => {
   const classes = useStyles();
   const [searchText, setSearchText] = useState("");
   const [artistList, setArtistList] = useState<Artist[]>([]);
-  const [trackList, setTrackList] = useState<TrackDetails[]>([]);
+  const [trackList, setTrackList] = useState<Track[]>([]);
   const lastArtistPromise = useRef();
   const lastTrackPromise = useRef();
 
@@ -61,9 +62,9 @@ const SearchContent: React.FC = () => {
     lastTrackPromise.current = currentPromise;
     
     currentPromise.then((tracks: SoundCloud.Track[]) => {
-      var trackDetails: TrackDetails[] = [];
+      var newTrackList: Track[] = [];
       tracks.map((track: SoundCloud.Track) => {
-        trackDetails.push({
+        newTrackList.push(createTrack({
           id: track.id.toString(),
           title: track.title,
           artists: [track.user.username],
@@ -71,14 +72,14 @@ const SearchContent: React.FC = () => {
           artwork: track.artwork_url,
           source: TrackSource.SOUNDCLOUD,
           externalUrl: track.permalink_url,
-        });
+        }));
 
         return track;
       });
 
       // only update if most recent
       if (currentPromise === lastTrackPromise.current) {
-        setTrackList(trackDetails);
+        setTrackList(newTrackList);
       }
     });
   }
