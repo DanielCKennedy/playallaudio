@@ -9,6 +9,7 @@ type ArtistListProps = {
 }
 
 const ArtistList: React.FC<ArtistListProps> = ({ artists }) => {
+  console.log(artists);
 
   return (
     <HorizontalList
@@ -17,8 +18,7 @@ const ArtistList: React.FC<ArtistListProps> = ({ artists }) => {
         <GridListTile key={artist.id}>
           <ArtistSearchCard
             color="#f70"
-            name={artist.name}
-            url={artist.artwork}
+            artist={artist}
           />
         </GridListTile>)}
     />

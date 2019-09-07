@@ -48,6 +48,7 @@ const App: React.FC = () => {
             <div className={classes.mainArea}>
               <Route exact path="/" component={HomePage} />
               <Route exact path="/search" component={SearchPage} />
+              <Route exact path="/search/soundcloud/:soundcloudId" component={SearchPage} />
             </div>
             <footer className={classes.bottomBar}>
             </footer>

@@ -33,7 +33,11 @@ const useStyles = makeStyles((theme: Theme) =>
 const SOUNDCLOUD_CLIENT_ID = process.env.REACT_APP_SOUNDCLOUD_CLIENT_ID;
 const soundcloud: SoundCloud = SoundCloud;
 
-const SearchContent: React.FC = () => {
+type SearchContentProps = {
+  soundcloudId: string,
+}
+
+const SearchContent: React.FC<SearchContentProps> = ({ soundcloudId }) => {
   const classes = useStyles();
   const [searchText, setSearchText] = useState("");
   const [artistList, setArtistList] = useState<Artist[]>([]);
@@ -48,10 +52,38 @@ const SearchContent: React.FC = () => {
   }, []);
 
   useEffect(() => {
+    soundcloudId && getArtistTracks(soundcloudId);
+
+  }, [soundcloudId]);
+
+  useEffect(() => {
     searchText && searchArtists(searchText);
     searchText && searchTracks(searchText);
     
   }, [searchText]);
+
+  const getArtistTracks = (id: string) => {
+    soundcloud.get(`/tracks`, {
+      user_id: id,
+    }).then((tracks: SoundCloud.Track[]) => {
+      var newTrackList: Track[] = [];
+      tracks.map((track: SoundCloud.Track) => {
+        newTrackList.push(createTrack({
+          id: track.id.toString(),
+          title: track.title,
+          artists: [track.user.username],
+          duration: track.duration,
+          artwork: track.artwork_url,
+          source: TrackSource.SOUNDCLOUD,
+          externalUrl: track.permalink_url,
+        }));
+
+        return track;
+      });
+
+      setTrackList(newTrackList);
+    });
+  };
 
   const searchTracks = (query: string) => {
     const currentPromise = soundcloud.get('/tracks', {

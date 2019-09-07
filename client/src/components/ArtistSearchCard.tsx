@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Card, CardActionArea, Avatar, CardContent, Typography, makeStyles, Theme, createStyles } from '@material-ui/core';
 import SearchRoundedIcon from '@material-ui/icons/SearchRounded';
+import { Artist } from '../types/playerTypes';
+import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -41,38 +43,61 @@ const useStyles = makeStyles((theme: Theme) =>
       minWidth: '220px',
       maxWidth: '245px',
     }),
+    link: {
+      color: 'white',
+      textDecoration: 'none',
+      "&:hover": {
+        color: 'white',
+        textDecoration: 'none',
+      },
+      "&:visited": {
+        color: 'white',
+        textDecoration: 'none',
+      },
+      "&:link": {
+        color: 'white',
+        textDecoration: 'none',
+      },
+      "&:active": {
+        color: 'white',
+        textDecoration: 'none',
+      }
+    },
   }),
 );
 
 type ArtistSearchCardProps = {
   color: string,
-  url: string,
-  name: string,
+  artist: Artist,
 }
 
 type StyleProps = {
   color: string,
 }
 
-const ArtistSearchCard: React.FC<ArtistSearchCardProps> = ({ color, url, name }) => {
+const ArtistSearchCard: React.FC<ArtistSearchCardProps> = ({ color, artist }) => {
   const classes = useStyles({ color });
   const [showSearch, setShowSearch] = useState(false);
+
   
   return (
     <Card className={classes.card}>
-      <CardActionArea onMouseEnter={() => {setShowSearch(true)}} onMouseLeave={() => {setShowSearch(false)}}>
+      <Link to={`/search/${artist.source}/${artist.id}`} className={classes.link}>
+      <CardActionArea
+        onMouseEnter={() => {setShowSearch(true)}} onMouseLeave={() => {setShowSearch(false)}}>
         <div className={classes.avatarContainer}>
           {showSearch && <SearchRoundedIcon className={classes.searchIcon} />}
-          <Avatar alt={name} src={url} className={classes.avatar} />
+          <Avatar alt={artist.name} src={artist.artwork} className={classes.avatar} />
         </div>
         <CardContent>
           <Typography gutterBottom variant="h4" color="secondary">
             <div className={classes.nameContainer}>
-              {name}
+              {artist.name}
             </div>
           </Typography>
         </CardContent>
       </CardActionArea>
+      </Link>
     </Card>
   );
 };

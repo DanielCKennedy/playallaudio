@@ -1,11 +1,16 @@
 import React from 'react';
 import PageTemplate from './PageTemplate';
 import SearchContent from './SearchContent';
+import { RouteComponentProps } from 'react-router-dom';
 
-const SearchPage: React.FC = () => {
+type MatchProps = {
+  soundcloudId: string;
+};
+
+const SearchPage: React.FC<RouteComponentProps<MatchProps>> = ({ match }) => {
 
   return (
-    <PageTemplate content={<SearchContent />} />
+    <PageTemplate content={<SearchContent soundcloudId={match.params.soundcloudId}/>} />
   );
 };
 
