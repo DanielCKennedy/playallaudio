@@ -6,6 +6,7 @@ import PlayallPlayer from './components/PlayallPlayer';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import HomePage from './components/HomePage';
 import SearchPage from './components/SearchPage';
+import MediaBar from './components/MediaBar';
 
 const bottomBarHeight = 90;
 
@@ -27,7 +28,7 @@ const useStyles = makeStyles((theme: Theme) =>
     bottomBar: {
       width: '100%',
       height: `${bottomBarHeight}px!important`,
-      backgroundColor: 'white',
+      // backgroundColor: 'white',
       position: "absolute",
       bottom: 0,
     },
@@ -51,6 +52,7 @@ const App: React.FC = () => {
               <Route exact path="/search/soundcloud/:soundcloudId" component={SearchPage} />
             </div>
             <footer className={classes.bottomBar}>
+              <MediaBar />
             </footer>
           </div>
         </Router>

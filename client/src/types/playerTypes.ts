@@ -78,3 +78,8 @@ export type Progress = {
   position: number,
   duration: number,
 };
+
+export type ControlState = {
+  isEnabled: boolean,
+  isPlaying: boolean,
+}

@@ -1,4 +1,4 @@
-import { PlayerActualState, PlayerState, Progress, TrackDetails, TrackSource } from "../types/playerTypes";
+import { PlayerActualState, PlayerState, Progress, TrackDetails, TrackSource, ControlState } from "../types/playerTypes";
 
 export const emptyTrackDetails: TrackDetails = {
   id: "",
@@ -8,13 +8,13 @@ export const emptyTrackDetails: TrackDetails = {
   artwork: "",
   source: TrackSource.EMPTY,
   externalUrl: "",
-}
+};
 
 export const emptyPlayerActualState: PlayerActualState = {
   position: 0,
   isPlaying: false,
   isDone: false,
-}
+};
 
 export const emptyPlayerState: PlayerState = {
   queue: {
@@ -32,4 +32,9 @@ export const emptyPlayerState: PlayerState = {
 export const emptyProgress: Progress = {
   position: 0,
   duration: 0,
-}
+};
+
+export const emptyControlState: ControlState = {
+  isEnabled: false,
+  isPlaying: false,
+};

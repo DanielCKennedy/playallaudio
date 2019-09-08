@@ -7,6 +7,7 @@ const PlayallSlider = withStyles({
     color: 'white',
     padding: 0,
     margin: 0,
+    paddingBottom: 8,
   },
   thumb: {
     display: 'none',

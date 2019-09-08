@@ -3,13 +3,14 @@ import SoundCloud from 'soundcloud';
 import playerReducer from '../reducers/playerReducer';
 import Player from '../players/Player';
 import SoundcloudPlayer from '../players/SoundcloudPlayer';
-import { PlayerAction, TrackSource, PlayerActualState, Progress, TrackDetails } from '../types/playerTypes';
-import { emptyPlayerState, emptyProgress, emptyTrackDetails } from '../constants/playerConstants';
+import { PlayerAction, TrackSource, PlayerActualState, Progress, TrackDetails, ControlState } from '../types/playerTypes';
+import { emptyPlayerState, emptyProgress, emptyTrackDetails, emptyControlState } from '../constants/playerConstants';
 import EmptyPlayer from '../players/EmptyPlayer';
 
 export const PlayerDispatchContext = React.createContext<React.Dispatch<PlayerAction>>((playerAction: PlayerAction) => {});
 export const ProgressContext = React.createContext<Progress>(emptyProgress);
 export const TrackDetailsContext = React.createContext<TrackDetails>(emptyTrackDetails);
+export const ControlStateContext = React.createContext<ControlState>(emptyControlState);
 
 type PlayallPlayerProps = {
   soundcloudClientId?: string,
@@ -108,7 +109,9 @@ const PlayallPlayer: React.FC<PlayallPlayerProps> = ( { soundcloudClientId, chil
     <PlayerDispatchContext.Provider value={playerDispatch}>
       <ProgressContext.Provider value={progress}>
         <TrackDetailsContext.Provider value={playerState.queue.track ? playerState.queue.track.details : emptyTrackDetails}>
-          {children}
+          <ControlStateContext.Provider value={{ isEnabled: playerState.queue.track !== undefined, isPlaying: playerState.player.isPlaying}}>
+            {children}
+          </ControlStateContext.Provider>
         </TrackDetailsContext.Provider>
       </ProgressContext.Provider>
     </PlayerDispatchContext.Provider>

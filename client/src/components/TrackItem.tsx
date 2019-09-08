@@ -4,6 +4,7 @@ import { makeStyles, Theme, createStyles, Typography, Button, IconButton } from 
 import QueueRoundedIcon from '@material-ui/icons/QueueRounded';
 import { PlayerDispatchContext } from './PlayallPlayer';
 import { createTrack } from '../utils/trackUtils';
+import Artwork from './Artwork';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -30,13 +31,10 @@ const useStyles = makeStyles((theme: Theme) =>
       justifyContent: 'center',
       flexDirection: 'column',
     },
-    artwork: (props: StyleProps) => ({
-      width: '60px',
-      height: '60px',
-      backgroundImage: `url(${props.artwork})`,
-      backgroundSize: 'cover!important',
-      margin: '5px',
-    }),
+    artwork: {
+      marginRight: '10px',
+      marginBottom: '5px',
+    },
     accessoryContainer: {
       display: 'flex',
       flexDirection: 'row-reverse',
@@ -49,21 +47,15 @@ type TrackItemProps = {
   onClick: () => void,
 }
 
-type StyleProps = {
-  artwork: string,
-}
-
 const TrackItem: React.FC<TrackItemProps> = ({ trackDetails, onClick }) => {
-  const classes = useStyles({
-    artwork: trackDetails.artwork,
-  });
+  const classes = useStyles();
   const playerDispatch = useContext(PlayerDispatchContext);
   
   return (
     <div className={classes.root}>
       <Button className={classes.flexGrow} onClick={onClick}>
-        <div className={classes.verticallyCenter}>
-          <div className={classes.artwork} />
+        <div className={`${classes.verticallyCenter} ${classes.artwork}`}>
+          <Artwork height={60} width={60} url={trackDetails.artwork} />
         </div>
         <div className={`${classes.verticallyCenter} ${classes.text} ${classes.flexGrow}`}>
           <Typography color="secondary">
