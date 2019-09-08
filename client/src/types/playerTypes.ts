@@ -1,4 +1,5 @@
 export enum TrackSource {
+  EMPTY = 'empty',
   SOUNDCLOUD = 'soundcloud'
 };
 
@@ -77,3 +78,8 @@ export type Progress = {
   position: number,
   duration: number,
 };
+
+export type ControlState = {
+  isEnabled: boolean,
+  isPlaying: boolean,
+}
