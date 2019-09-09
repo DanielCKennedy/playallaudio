@@ -83,20 +83,20 @@ const ArtistSearchCard: React.FC<ArtistSearchCardProps> = ({ color, artist }) =>
   return (
     <Card className={classes.card}>
       <Link to={`/search/${artist.source}/${artist.id}`} className={classes.link}>
-      <CardActionArea
-        onMouseEnter={() => {setShowSearch(true)}} onMouseLeave={() => {setShowSearch(false)}}>
-        <div className={classes.avatarContainer}>
-          {showSearch && <SearchRoundedIcon className={classes.searchIcon} />}
-          <Avatar alt={artist.name} src={artist.artwork} className={classes.avatar} />
-        </div>
-        <CardContent>
-          <Typography gutterBottom variant="h4" color="secondary">
-            <div className={classes.nameContainer}>
-              {artist.name}
-            </div>
-          </Typography>
-        </CardContent>
-      </CardActionArea>
+        <CardActionArea
+          onMouseEnter={() => {setShowSearch(true)}} onMouseLeave={() => {setShowSearch(false)}}>
+          <div className={classes.avatarContainer}>
+            {showSearch && <SearchRoundedIcon className={classes.searchIcon} />}
+            <Avatar alt={artist.name} src={artist.artwork} className={classes.avatar} />
+          </div>
+          <CardContent>
+            <Typography gutterBottom variant="h4" color="secondary">
+              <div className={classes.nameContainer}>
+                {artist.name}
+              </div>
+            </Typography>
+          </CardContent>
+        </CardActionArea>
       </Link>
     </Card>
   );
