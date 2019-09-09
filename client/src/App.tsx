@@ -28,7 +28,6 @@ const useStyles = makeStyles((theme: Theme) =>
     bottomBar: {
       width: '100%',
       height: `${bottomBarHeight}px!important`,
-      // backgroundColor: 'white',
       position: "absolute",
       bottom: 0,
     },

@@ -9,7 +9,6 @@ const useStyles = makeStyles((theme: Theme) =>
       height: 'auto',
       maxHeight: 'calc(100% - 88px)',
       overflow: 'visible',
-      width: '100vw',
     },
     innerDiv: {
       width: '100%',
