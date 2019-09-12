@@ -1,4 +1,4 @@
-import { requestPlayerEffect, addToQueue, next, prev, setPlayerState, seek, setQueue } from "./playerUtils";
+import { requestPlayerEffect, addToQueue, next, prev, setPlayerState, seek, setQueue, removeFromQueue, playFromQueue } from "./playerUtils";
 import { mockPlayerState, mockTrack1, mockTrack2, mockTrack3, mockQueue } from "../mocks/playerMocks";
 import { emptyPlayerState, emptyPlayerActualState } from "../constants/playerConstants";
 import { PlayerActualState } from "../types/playerTypes";
@@ -134,6 +134,203 @@ describe("addToQueue", () => {
   });
 });
 
+describe("removeFromQueue", () => {
+  it("returns initial state when no track given", () => {
+    const initialState = mockPlayerState;
+    const state = removeFromQueue(initialState, undefined);
+
+    expect(state).toEqual(initialState);
+  }),
+
+  it("stops and remove current track if current track and no queue", () => {
+    const initialState = {
+      ...mockPlayerState,
+      queue: {
+        track: mockTrack1,
+        next: [],
+        prev: [],
+      }
+    };
+    const state = removeFromQueue(initialState, mockTrack1);
+
+    expect(state).toEqual({
+      ...initialState,
+      queue: {
+        ...initialState.queue,
+        track: undefined,
+      },
+      request: {
+        effect: 'STOP',
+        seekPos: undefined,
+      }
+    });
+  }),
+
+  it("plays next when track when current track and has next queue", () => {
+    const initialState = {
+      ...mockPlayerState,
+      queue: {
+        track: mockTrack1,
+        next: [mockTrack2, mockTrack3],
+        prev: []
+      }
+    };
+    const state = removeFromQueue(initialState, mockTrack1);
+
+    expect(state).toEqual({
+      ...initialState,
+      queue: {
+        track: mockTrack2,
+        next: [mockTrack3],
+        prev: []
+      },
+      request: {
+        effect: 'START',
+        seekPos: undefined,
+      }
+    });
+  }),
+
+  it("loops queues and plays next when is current track and only prev queue", () => {
+    const initialState = {
+      ...mockPlayerState,
+      queue: {
+        track: mockTrack1,
+        next: [],
+        prev: [mockTrack2, mockTrack3]
+      }
+    };
+    const state = removeFromQueue(initialState, mockTrack1);
+
+    expect(state).toEqual({
+      ...initialState,
+      queue: {
+        track: mockTrack3,
+        next: [mockTrack2],
+        prev: []
+      },
+      request: {
+        effect: 'START',
+        seekPos: undefined,
+      }
+    });
+  }),
+
+  it("removes successfully from nextQueue", () => {
+    const initialState = {
+      ...mockPlayerState,
+      queue: {
+        track: mockTrack1,
+        next: [mockTrack2, mockTrack3],
+        prev: []
+      }
+    };
+    const state = removeFromQueue(initialState, mockTrack2);
+
+    expect(state).toEqual({
+      ...initialState,
+      queue: {
+        track: mockTrack1,
+        next: [mockTrack3],
+        prev: []
+      }
+    });
+  }),
+
+  it("removes successfully from prevQueue", () => {
+    const initialState = {
+      ...mockPlayerState,
+      queue: {
+        track: mockTrack1,
+        next: [mockTrack3],
+        prev: [mockTrack2]
+      }
+    };
+    const state = removeFromQueue(initialState, mockTrack2);
+
+    expect(state).toEqual({
+      ...initialState,
+      queue: {
+        track: mockTrack1,
+        next: [mockTrack3],
+        prev: []
+      }
+    });
+  })
+});
+
+describe("playFromQueue", () => {
+  it("plays the current song", () => {
+    const initialState = {
+      ...mockPlayerState,
+      queue: {
+        track: mockTrack1,
+        next: [mockTrack3],
+        prev: [mockTrack2],
+      }
+    };
+    const state = playFromQueue(initialState, mockTrack1);
+
+    expect(state).toEqual({
+      ...initialState,
+      request: {
+        ...initialState.request,
+        effect: 'START',
+      },
+    });
+  }),
+
+  it("plays a song in next queue", () => {
+    const initialState = {
+      ...mockPlayerState,
+      queue: {
+        track: mockTrack1,
+        next: [mockTrack3],
+        prev: [mockTrack2],
+      }
+    };
+    const state = playFromQueue(initialState, mockTrack3);
+
+    expect(state).toEqual({
+      ...initialState,
+      queue: {
+        track: mockTrack3,
+        next: [],
+        prev: [mockTrack1, mockTrack2],
+      },
+      request: {
+        ...initialState.request,
+        effect: 'START',
+      },
+    });
+  }),
+
+  it("plays a song in prev queue", () => {
+    const initialState = {
+      ...mockPlayerState,
+      queue: {
+        track: mockTrack1,
+        next: [mockTrack3],
+        prev: [mockTrack2],
+      }
+    };
+    const state = playFromQueue(initialState, mockTrack2);
+
+    expect(state).toEqual({
+      ...initialState,
+      queue: {
+        track: mockTrack2,
+        next: [mockTrack1, mockTrack3],
+        prev: [],
+      },
+      request: {
+        ...initialState.request,
+        effect: 'START',
+      },
+    });
+  })
+})
+
 describe("setQueue", () => {
   it("returns initial state when no queue given", () => {
     const initialState = mockPlayerState;
@@ -156,11 +353,6 @@ describe("setQueue", () => {
     expect(state).toEqual({
       ...initialState,
       queue: mockQueue,
-      player: {
-        ...initialState.player,
-        position: 0,
-        isDone: false,
-      },
       request: {
         effect: 'START',
         seekPos: undefined,

@@ -4,6 +4,7 @@ import ArtistSearchCard from './ArtistSearchCard';
 import PlaylistList from './PlaylistList';
 import Spacer from './Spacer';
 import { TrackSource } from '../types/playerTypes';
+import QueueList from './QueueList';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -118,6 +119,8 @@ const HomeContent: React.FC = () => {
       </ul>
       <Spacer />
       <PlaylistList title="Featured" />
+      <Spacer />
+      <QueueList />
       <Spacer />
     </React.Fragment>
   );

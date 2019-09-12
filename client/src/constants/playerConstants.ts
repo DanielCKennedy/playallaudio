@@ -1,4 +1,4 @@
-import { PlayerActualState, PlayerState, Progress, TrackDetails, TrackSource, ControlState } from "../types/playerTypes";
+import { PlayerActualState, PlayerState, Progress, TrackDetails, TrackSource, ControlState, Queue } from "../types/playerTypes";
 
 export const emptyTrackDetails: TrackDetails = {
   id: "",
@@ -16,12 +16,14 @@ export const emptyPlayerActualState: PlayerActualState = {
   isDone: false,
 };
 
+export const emptyQueue: Queue = {
+  track: undefined,
+  prev: [],
+  next: [],
+}
+
 export const emptyPlayerState: PlayerState = {
-  queue: {
-    track: undefined,
-    prev: [],
-    next: []
-  },
+  queue: emptyQueue,
   player: emptyPlayerActualState,
   request: {
     effect: undefined,

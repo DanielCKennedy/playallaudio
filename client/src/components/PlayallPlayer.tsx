@@ -3,14 +3,15 @@ import SoundCloud from 'soundcloud';
 import playerReducer from '../reducers/playerReducer';
 import Player from '../players/Player';
 import SoundcloudPlayer from '../players/SoundcloudPlayer';
-import { PlayerAction, TrackSource, PlayerActualState, Progress, TrackDetails, ControlState } from '../types/playerTypes';
-import { emptyPlayerState, emptyProgress, emptyTrackDetails, emptyControlState } from '../constants/playerConstants';
+import { PlayerAction, TrackSource, PlayerActualState, Progress, TrackDetails, ControlState, Queue } from '../types/playerTypes';
+import { emptyPlayerState, emptyProgress, emptyTrackDetails, emptyControlState, emptyQueue } from '../constants/playerConstants';
 import EmptyPlayer from '../players/EmptyPlayer';
 
 export const PlayerDispatchContext = React.createContext<React.Dispatch<PlayerAction>>((playerAction: PlayerAction) => {});
 export const ProgressContext = React.createContext<Progress>(emptyProgress);
 export const TrackDetailsContext = React.createContext<TrackDetails>(emptyTrackDetails);
 export const ControlStateContext = React.createContext<ControlState>(emptyControlState);
+export const QueueContext = React.createContext<Queue>(emptyQueue);
 
 type PlayallPlayerProps = {
   soundcloudClientId?: string,
@@ -34,7 +35,10 @@ const PlayallPlayer: React.FC<PlayallPlayerProps> = ( { soundcloudClientId, chil
   
   const handlePlayerCommand = (playerPromise: Promise<PlayerActualState>) => {
     playerPromise.then((state: PlayerActualState) => {
-      console.log(state);
+      // console.log(state);
+      if (state.isDone) {
+        console.log(state);
+      }
       playerDispatch({ type: 'SET_PLAYER_STATE', player: state });
     })
     .catch((reason) => {
@@ -64,17 +68,20 @@ const PlayallPlayer: React.FC<PlayallPlayerProps> = ( { soundcloudClientId, chil
             handlePlayerCommand(players[source].play());
             break;
           case 'PAUSE':
-              handlePlayerCommand(players[source].pause());
+            handlePlayerCommand(players[source].pause());
             break;
           case 'SEEK':
             if (request.seekPos) {
               handlePlayerCommand(players[source].seek(request.seekPos));
             }
-            break;         
+            break;
           default:
             break;
         }
       }
+    }
+    if (playerState.request.effect === 'STOP') {
+      handlePlayerCommand(players[TrackSource.SOUNDCLOUD].stop());
     }
   }, [playerState.request, playerState.queue.track]);
 
@@ -110,7 +117,9 @@ const PlayallPlayer: React.FC<PlayallPlayerProps> = ( { soundcloudClientId, chil
       <ProgressContext.Provider value={progress}>
         <TrackDetailsContext.Provider value={playerState.queue.track ? playerState.queue.track.details : emptyTrackDetails}>
           <ControlStateContext.Provider value={{ isEnabled: playerState.queue.track !== undefined, isPlaying: playerState.player.isPlaying}}>
-            {children}
+            <QueueContext.Provider value={playerState.queue}>
+              {children}
+            </QueueContext.Provider>
           </ControlStateContext.Provider>
         </TrackDetailsContext.Provider>
       </ProgressContext.Provider>

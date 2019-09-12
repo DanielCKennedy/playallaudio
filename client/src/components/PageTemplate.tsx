@@ -21,6 +21,10 @@ const useStyles = makeStyles((theme: Theme) =>
       height: '100%',
       width: '100%',
       flex: 1,
+      maxWidth: `calc(100vw - ${navBarWidth}px)`,
+      [theme.breakpoints.down("xs")]: {
+        maxWidth: '100vw',
+      }
     },
     navBarWidth: {
       width: `${navBarWidth}px!important`,
