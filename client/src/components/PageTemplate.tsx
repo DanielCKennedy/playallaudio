@@ -6,7 +6,7 @@ const navBarWidth = 100;
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    flex: {
+    root: {
       width: '100%',
       display: 'flex',
       flexDirection: 'row',
@@ -21,10 +21,12 @@ const useStyles = makeStyles((theme: Theme) =>
       height: '100%',
       width: '100%',
       flex: 1,
-      maxWidth: `calc(100vw - ${navBarWidth}px)`,
+      maxWidth: `calc(100% - ${navBarWidth}px)`,
       [theme.breakpoints.down("xs")]: {
-        maxWidth: '100vw',
-      }
+        maxWidth: '100%',
+      },
+      display: 'flex',
+      flexDirection: 'row',
     },
     navBarWidth: {
       width: `${navBarWidth}px!important`,
@@ -36,14 +38,14 @@ const useStyles = makeStyles((theme: Theme) =>
 
 type PageTemplateProps = {
   header?: React.ReactNode,
-  content: React.ReactNode
+  content: React.ReactNode,
 }
 
 const PageTemplate: React.FC<PageTemplateProps> = ({ header, content }) => {
   const classes = useStyles();
 
   return (
-    <div className={classes.flex}>
+    <div className={classes.root}>
       {header}
       <Hidden xsDown>
         <div className={classes.navBar}>

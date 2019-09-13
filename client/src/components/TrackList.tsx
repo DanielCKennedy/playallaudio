@@ -22,10 +22,10 @@ const createQueue = (findTrack: Track, tracks: Track[]): Queue => {
   var nextQueue: Track[] = [];
   var track: Track | undefined = undefined;
 
-  const index = tracks.indexOf(findTrack)
+  const index = tracks.indexOf(findTrack);
   
   if (index >= 0 && index < tracks.length) {
-    prevQueue = tracks.slice(0, index);
+    prevQueue = tracks.slice(0, index).reverse();
     nextQueue = tracks.slice(index + 1, tracks.length);
     track = tracks[index];
   }
@@ -34,7 +34,7 @@ const createQueue = (findTrack: Track, tracks: Track[]): Queue => {
     track: track,
     prev: prevQueue,
     next: nextQueue,
-  }
+  };
 }
 
 const TrackList: React.FC<TrackListProps> = ({ title, tracks }) => {

@@ -1,8 +1,9 @@
 import React, { useContext } from 'react';
-import { makeStyles, createStyles, Theme, ListItem, ListItemText, ListItemSecondaryAction, IconButton } from '@material-ui/core';
+import { makeStyles, createStyles, Theme, ListItem, ListItemText, ListItemSecondaryAction, IconButton, ListItemAvatar } from '@material-ui/core';
 import { Track } from '../types/playerTypes';
 import CloseRoundedIcon from '@material-ui/icons/CloseRounded';
 import { PlayerDispatchContext } from './PlayallPlayer';
+import Artwork from './Artwork';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -16,6 +17,9 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     selected: {
       backgroundColor: '#ffffff11',
+    },
+    artwork: {
+      marginRight: '10px',
     },
   })
 );
@@ -37,6 +41,8 @@ const QueueTrackItem: React.FC<QueueTrackItemProps> = ({ track, selected }) => {
     playerDispatch({ type: 'REMOVE_FROM_QUEUE', track: track });
   }
 
+  console.log(track.details.artwork);
+
   return (
     <ListItem
       button
@@ -45,6 +51,11 @@ const QueueTrackItem: React.FC<QueueTrackItemProps> = ({ track, selected }) => {
       selected={selected}
       onClick={playFromQueue}
     >
+      {selected &&
+      <ListItemAvatar className={classes.artwork}>
+        <Artwork height={200} width={200} url={track.details.artwork.replace("large", "t300x300")} />
+      </ListItemAvatar>}
+      
       <ListItemText 
         primary={track.details.title}
         secondary={track.details.artists.join(", ")}

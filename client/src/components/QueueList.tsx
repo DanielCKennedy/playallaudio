@@ -17,16 +17,14 @@ const QueueList: React.FC = () => {
   const queue = useContext(QueueContext);
 
   return (
-    <React.Fragment>
-      <List className={classes.root}>
-        {queue.prev.slice(0).reverse().map((track: Track) =>
-          <QueueTrackItem track={track} key={track.id} />)}
-        {queue.track &&
-        <QueueTrackItem track={queue.track} key={queue.track.id} selected />}
-        {queue.next.map((track: Track) =>
-          <QueueTrackItem track={track} key={track.id} />)}
-      </List>
-    </React.Fragment>
+    <List className={classes.root}>
+      {queue.prev.slice(0).reverse().map((track: Track) =>
+        <QueueTrackItem track={track} key={track.id} />)}
+      {queue.track &&
+      <QueueTrackItem track={queue.track} key={queue.track.id} selected />}
+      {queue.next.map((track: Track) =>
+        <QueueTrackItem track={track} key={track.id} />)}
+    </List>
   );
 };
 

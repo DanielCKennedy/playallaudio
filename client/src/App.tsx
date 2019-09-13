@@ -3,10 +3,11 @@ import { CssBaseline, Theme } from '@material-ui/core';
 import { ThemeProvider, makeStyles, createStyles } from '@material-ui/styles';
 import { darkTheme } from './theme';
 import PlayallPlayer from './components/PlayallPlayer';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import HomePage from './components/HomePage';
 import SearchPage from './components/SearchPage';
 import MediaBar from './components/MediaBar';
+import QueuePage from './components/QueuePage';
 
 const bottomBarHeight = 90;
 
@@ -46,9 +47,13 @@ const App: React.FC = () => {
         <Router>
           <div className={classes.app}>
             <div className={classes.mainArea}>
-              <Route exact path="/" component={HomePage} />
-              <Route exact path="/search" component={SearchPage} />
-              <Route exact path="/search/soundcloud/:soundcloudId" component={SearchPage} />
+              <Switch>
+                <Route exact path="/" component={HomePage} />
+                <Route exact path="/queue" component={QueuePage} />
+                <Route exact path="/search" component={SearchPage} />
+                <Route exact path="/search/soundcloud/:soundcloudId" component={SearchPage} />
+                <Route component={HomePage} />
+              </Switch>
             </div>
             <footer className={classes.bottomBar}>
               <MediaBar />
