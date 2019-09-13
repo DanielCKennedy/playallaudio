@@ -41,8 +41,6 @@ const QueueTrackItem: React.FC<QueueTrackItemProps> = ({ track, selected }) => {
     playerDispatch({ type: 'REMOVE_FROM_QUEUE', track: track });
   }
 
-  console.log(track.details.artwork);
-
   return (
     <ListItem
       button
