@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { makeStyles, Theme, createStyles, Typography } from '@material-ui/core';
+import { makeStyles, Theme, createStyles, Typography, List } from '@material-ui/core';
 import { Track, Queue } from '../types/playerTypes';
 import TrackItem from './TrackItem';
 import { PlayerDispatchContext } from './PlayallPlayer';
@@ -9,11 +9,6 @@ const useStyles = makeStyles((theme: Theme) =>
     listContainer: {
       borderTop: '1px solid white',
     },
-    list: {
-      listStyle: 'none',
-      margin: 0,
-      padding: 0,
-    }
   }),
 );
 
@@ -27,10 +22,10 @@ const createQueue = (findTrack: Track, tracks: Track[]): Queue => {
   var nextQueue: Track[] = [];
   var track: Track | undefined = undefined;
 
-  const index = tracks.indexOf(findTrack)
+  const index = tracks.indexOf(findTrack);
   
   if (index >= 0 && index < tracks.length) {
-    prevQueue = tracks.slice(0, index);
+    prevQueue = tracks.slice(0, index).reverse();
     nextQueue = tracks.slice(index + 1, tracks.length);
     track = tracks[index];
   }
@@ -39,7 +34,7 @@ const createQueue = (findTrack: Track, tracks: Track[]): Queue => {
     track: track,
     prev: prevQueue,
     next: nextQueue,
-  }
+  };
 }
 
 const TrackList: React.FC<TrackListProps> = ({ title, tracks }) => {
@@ -47,21 +42,19 @@ const TrackList: React.FC<TrackListProps> = ({ title, tracks }) => {
   const playerDispatch = useContext(PlayerDispatchContext);
 
   return (
-    <div>
+    <React.Fragment>
       <Typography variant="h4" component="h3" color="textPrimary" gutterBottom>
         {title}
       </Typography>
-      <div className={classes.listContainer}>
-        <ul className={classes.list}>
-          {tracks.map((track: Track) => 
-            <li key={track.id}>
-              <TrackItem
-                trackDetails={track.details}
-                onClick={() => playerDispatch({ type: 'SET_QUEUE', queue: createQueue(track, tracks)})} />
-            </li>)}
-        </ul>
-      </div>
-    </div>
+      <List className={classes.listContainer}>
+        {tracks.map((track: Track) =>
+          <TrackItem
+            key={track.id}
+            track={track}
+            onClick={() => playerDispatch({ type: 'SET_QUEUE', queue: createQueue(track, tracks)})}
+          />)}
+      </List>
+    </React.Fragment>
   );
 }
 

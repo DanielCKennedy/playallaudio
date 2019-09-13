@@ -9,7 +9,6 @@ type ArtistListProps = {
 }
 
 const ArtistList: React.FC<ArtistListProps> = ({ artists }) => {
-  console.log(artists);
 
   return (
     <HorizontalList

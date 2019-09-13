@@ -35,6 +35,7 @@ export type PlayerEffect =
   'START' |
   'PLAY' |
   'PAUSE' |
+  'STOP' |
   'SEEK';
 
 export type PlayerRequest = {
@@ -61,6 +62,8 @@ export type PlayerActionType =
   'PREV' |
   'SEEK' |
   'ADD_TO_QUEUE' |
+  'REMOVE_FROM_QUEUE' |
+  'PLAY_FROM_QUEUE' |
   'SET_QUEUE' |
   'SET_PLAYER_STATE' |
   'RESET_REQUEST';

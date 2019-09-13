@@ -2,6 +2,7 @@ import React from 'react';
 import { makeStyles, Theme, createStyles, IconButton } from '@material-ui/core';
 import HomeRoundedIcon from '@material-ui/icons/HomeRounded';
 import SearchRoundedIcon from '@material-ui/icons/SearchRounded';
+import QueueMusicRoundedIcon from '@material-ui/icons/QueueMusicRounded';
 import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -47,6 +48,11 @@ const NavBar: React.FC = () => {
       <Link to="/" className={classes.link}>
         <IconButton color="secondary">
           <HomeRoundedIcon fontSize="large" />
+        </IconButton>
+      </Link>
+      <Link to="/queue" className={classes.link}>
+        <IconButton color="secondary">
+          <QueueMusicRoundedIcon fontSize="large" />
         </IconButton>
       </Link>
       <Link to="/search" className={classes.link}>
