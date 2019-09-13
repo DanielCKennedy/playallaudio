@@ -35,10 +35,6 @@ const PlayallPlayer: React.FC<PlayallPlayerProps> = ( { soundcloudClientId, chil
   
   const handlePlayerCommand = (playerPromise: Promise<PlayerActualState>) => {
     playerPromise.then((state: PlayerActualState) => {
-      // console.log(state);
-      if (state.isDone) {
-        console.log(state);
-      }
       playerDispatch({ type: 'SET_PLAYER_STATE', player: state });
     })
     .catch((reason) => {
