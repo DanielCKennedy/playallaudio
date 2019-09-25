@@ -4,6 +4,7 @@ import ArtistSearchCard from './ArtistSearchCard';
 import PlaylistList from './PlaylistList';
 import Spacer from './Spacer';
 import { TrackSource } from '../types/playerTypes';
+import SpotifyAuthNotification from './SpotifyAuthNotification';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -116,6 +117,8 @@ const HomeContent: React.FC = () => {
           </li>
         )}
       </ul>
+      <Spacer />
+      <SpotifyAuthNotification />
       <Spacer />
       <PlaylistList title="Featured" />
       <Spacer />

@@ -1,4 +1,6 @@
 import express from 'express';
+const fetch = require('node-fetch');
+const btoa = require('btoa');
 const querystring = require('querystring');
 
 require('dotenv').config();
@@ -37,25 +39,25 @@ spotifyRouter.get('/callback', (req: express.Request, res: express.Response) => 
         redirect_uri: redirectUri
       })
     })
-      .then((data: Response) => {
-        console.log(data.status + ":" + data.statusText);
-        data.json().then((json: any) => {
-          if (json.access_token) {
-            res.redirect('http://localhost:3000/#' +
-              querystring.stringify({
-                access_token: json.access_token,
-                refresh_token: json.refresh_token
-              }));
-          }
-          else {
-            res.redirect('http://localhost:3000/#');
-          }
-        })
+    .then((data: Response) => {
+      console.log(data.status + ":" + data.statusText);
+      data.json().then((json: any) => {
+        if (json.access_token) {
+          res.redirect('http://localhost:3000/#' +
+            querystring.stringify({
+              spotify_access_token: json.access_token,
+              spotify_refresh_token: json.refresh_token
+            }));
+        }
+        else {
+          res.redirect('http://localhost:3000/#');
+        }
       })
-      .catch((reason: any) => {
-        console.log(reason);
-        res.redirect('http://localhost:3000/#');
-      })
+    })
+    .catch((reason: any) => {
+      console.log(reason);
+      res.redirect('http://localhost:3000/#');
+    })
 
   }
   else {
