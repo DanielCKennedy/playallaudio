@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { CssBaseline, Theme } from '@material-ui/core';
 import { ThemeProvider, makeStyles, createStyles } from '@material-ui/styles';
 import { darkTheme } from './theme';
@@ -37,13 +37,53 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const SOUNDCLOUD_CLIENT_ID = process.env.REACT_APP_SOUNDCLOUD_CLIENT_ID;
 
+const getHashParams = (): any => {
+  let hashParams: any = {};
+  let e, r = /([^&;=]+)=?([^&;]*)/g,
+    q = window.location.hash.substring(1);
+  while ((e = r.exec(q))) {
+    hashParams[e[1]] = decodeURIComponent(e[2]);
+  }
+  return hashParams;
+}
+
+const decodeSpotifyToken = (): string => {
+  const hashParams = getHashParams();
+  if (hashParams.spotify_access_token) {
+    return hashParams.spotify_access_token;
+  }
+  return "";
+}
+
+const addSpotifySdkToDom = () => {
+  const spotifyScript: HTMLScriptElement = document.createElement('script');
+    spotifyScript.id = 'spotify-script';
+    spotifyScript.type = 'text/javascript';
+    spotifyScript.async = false;
+    spotifyScript.defer = false;
+    spotifyScript.src = 'https://sdk.scdn.co/spotify-player.js';
+
+    document.head.appendChild(spotifyScript);
+};
+
 const App: React.FC = () => {
   const classes = useStyles();
+  const [spotifyToken, setSpotifyToken] = useState("");
+
+  useEffect(() => {
+    const spotifyAccessToken = decodeSpotifyToken();
+    if (spotifyAccessToken) {
+      window.onSpotifyWebPlaybackSDKReady = () => {
+        setSpotifyToken(spotifyAccessToken);
+      }
+      addSpotifySdkToDom();
+    }
+  }, []);
 
   return (
     <ThemeProvider theme={darkTheme}>
       <CssBaseline />
-      <PlayallPlayer soundcloudClientId={SOUNDCLOUD_CLIENT_ID}>
+      <PlayallPlayer soundcloudClientId={SOUNDCLOUD_CLIENT_ID} spotifyAccessToken={spotifyToken}>
         <Router>
           <div className={classes.app}>
             <div className={classes.mainArea}>

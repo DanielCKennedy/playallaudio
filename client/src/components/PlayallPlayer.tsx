@@ -6,6 +6,7 @@ import SoundcloudPlayer from '../players/SoundcloudPlayer';
 import { PlayerAction, TrackSource, PlayerActualState, Progress, TrackDetails, ControlState, Queue } from '../types/playerTypes';
 import { emptyPlayerState, emptyProgress, emptyTrackDetails, emptyControlState, emptyQueue } from '../constants/playerConstants';
 import EmptyPlayer from '../players/EmptyPlayer';
+import SpotifyPlayer from '../players/SpotifyPlayer';
 
 export const PlayerDispatchContext = React.createContext<React.Dispatch<PlayerAction>>((playerAction: PlayerAction) => {});
 export const ProgressContext = React.createContext<Progress>(emptyProgress);
@@ -15,21 +16,24 @@ export const QueueContext = React.createContext<Queue>(emptyQueue);
 
 type PlayallPlayerProps = {
   soundcloudClientId?: string,
+  spotifyAccessToken?: string,
 }
 
 type Players = {
   [TrackSource.EMPTY]: Player,
-  [TrackSource.SOUNDCLOUD]: Player
+  [TrackSource.SOUNDCLOUD]: Player,
+  [TrackSource.SPOTIFY]: Player,
 }
 
 const players: Players = {
   [TrackSource.EMPTY]: new EmptyPlayer(),
   [TrackSource.SOUNDCLOUD]: new SoundcloudPlayer(SoundCloud),
+  [TrackSource.SPOTIFY]: new SpotifyPlayer(),
 };
 
 var interval: NodeJS.Timeout;
 
-const PlayallPlayer: React.FC<PlayallPlayerProps> = ( { soundcloudClientId, children } ) => {
+const PlayallPlayer: React.FC<PlayallPlayerProps> = ( { soundcloudClientId, spotifyAccessToken, children } ) => {
   const [playerState, playerDispatch] = useReducer(playerReducer, emptyPlayerState);
   const [progress, setProgress] = useState<Progress>(emptyProgress);
   
@@ -48,6 +52,13 @@ const PlayallPlayer: React.FC<PlayallPlayerProps> = ( { soundcloudClientId, chil
       players[TrackSource.SOUNDCLOUD].init(soundcloudClientId);
     }
   }, [soundcloudClientId]);
+
+  // Initialize spotify player
+  useEffect(() => {
+    if (spotifyAccessToken && !players[TrackSource.SPOTIFY].isEnabled) {
+      players[TrackSource.SPOTIFY].init(spotifyAccessToken);
+    }
+  }, [spotifyAccessToken]);
 
   // Handle player effect requests
   useEffect(() => {
