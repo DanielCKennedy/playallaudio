@@ -7,35 +7,22 @@ class SpotifyPlayer implements Player {
   player?: Spotify.SpotifyPlayer;
   isEnabled: boolean;
   isDone: boolean;
-  state: PlayerActualState;
 
   constructor() {
     this.deviceId = "";
     this.accessToken = "";
     this.isEnabled = false;
     this.isDone = false;
-    this.state = {
-      position: 0,
-      isPlaying: false,
-      isDone: false,
-    };
   }
 
-  private spotifyStateChanged(state: Spotify.PlaybackState | null): void {
+  private spotifyStateChanged(state: Spotify.PlaybackState | null, self: any): void {
     if (state) {
-      const position = state.position;
-      const isPlaying = !state.paused;
+      // Track is finished if the previous tracks list gains a value
       const isDone = state.track_window.previous_tracks.length > 0;
 
       if (isDone) {
-        this.isDone = isDone;
+        self.isDone = isDone;
       }
-
-      this.state = {
-        position: position,
-        isPlaying: isPlaying,
-        isDone: isDone,
-      };
     }
   };
 
@@ -54,7 +41,7 @@ class SpotifyPlayer implements Player {
 
     // Playback status updates
     this.player.removeListener('player_state_changed');
-    this.player.addListener('player_state_changed', this.spotifyStateChanged);
+    this.player.addListener('player_state_changed', (state) => this.spotifyStateChanged(state, this));
 
     // Ready
     this.player.addListener('ready', (data: Spotify.WebPlaybackInstance) => {
@@ -86,11 +73,11 @@ class SpotifyPlayer implements Player {
         redirect: 'follow',
         referrer: 'no-referrer',
         body: JSON.stringify({
-            uris: [track.details.id]
+            uris: [`spotify:track:${track.details.id}`]
         })
       })
       .then(() => {
-        return this.getState();
+        return this.getState(true);
       })
       .catch(() => {
         return this.getState();
@@ -105,7 +92,7 @@ class SpotifyPlayer implements Player {
     if (this.isEnabled && this.player) {
       return this.player.resume()
         .then(() => {
-          return this.getState();
+          return this.getState(true);
         })
         .catch(() => {
           return this.getState();
@@ -130,7 +117,7 @@ class SpotifyPlayer implements Player {
     if (this.isEnabled && this.player) {
       return this.player.seek(position)
         .then(() => {
-          return this.getState();
+          return this.getState(undefined, position);
         })
         .catch(() => {
           return this.getState();
@@ -143,6 +130,7 @@ class SpotifyPlayer implements Player {
 
   stop(): Promise<PlayerActualState> {
     if (this.isEnabled && this.player) {
+      this.player.pause();
       return new Promise((resolve) => {
         return resolve({
           position: 0,
@@ -156,7 +144,7 @@ class SpotifyPlayer implements Player {
     }
   }
 
-  getState(): Promise<PlayerActualState> {
+  getState(isPlaying?: boolean, position?: number): Promise<PlayerActualState> {
     if (this.isDone) {
       this.isDone = false;
       return new Promise((resolve) => {
@@ -168,8 +156,45 @@ class SpotifyPlayer implements Player {
       });
     }
 
-    return new Promise((resolve) => {
-      return resolve(this.state);
+    return this.getPlaybackState()
+    .then((playbackState: SpotifyApi.CurrentPlaybackResponse | undefined) => {
+      if (playbackState) {
+        return {
+          position: position || playbackState.progress_ms || 0,
+          isPlaying: isPlaying || playbackState.is_playing,
+          isDone: false,
+        };
+      }
+      return {
+        position: 0,
+        isPlaying: false,
+        isDone: true,
+      }
+    })
+    .catch(() => {
+      return {
+        position: 0,
+        isPlaying: false,
+        isDone: true,
+      }
+    });
+  }
+
+  private getPlaybackState(): Promise<SpotifyApi.CurrentPlaybackResponse | undefined> {
+    return fetch(`https://api.spotify.com/v1/me/player`, {
+      headers: {
+        Authorization: `Bearer ${this.accessToken}`,
+        'Content-Type': 'application/json',
+      },
+      method: 'GET',
+    }).then(d => {
+      if (d.status === 204) {
+        return new Promise((resolve) => {
+          return resolve(undefined);
+        });
+      }
+  
+      return d.json();
     });
   }
 }

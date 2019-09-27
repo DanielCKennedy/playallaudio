@@ -63,12 +63,16 @@ const PlayallPlayer: React.FC<PlayallPlayerProps> = ( { soundcloudClientId, spot
   // Handle player effect requests
   useEffect(() => {
     if (playerState.queue.track && players[playerState.queue.track.details.source].isEnabled) {
+      console.log(playerState.request);
+      console.log("source: " + playerState.queue.track.details.source);
       const request = playerState.request;
       const source = playerState.queue.track.details.source;
       if (request.effect !== undefined) {
         playerDispatch({ type: 'RESET_REQUEST' });
         switch (request.effect) {
           case 'START':
+            players[TrackSource.SOUNDCLOUD].isEnabled && players[TrackSource.SOUNDCLOUD].stop()
+            players[TrackSource.SPOTIFY].isEnabled && players[TrackSource.SPOTIFY].stop()
             handlePlayerCommand(players[source].start(playerState.queue.track));
             break;
           case 'PLAY':
@@ -89,6 +93,7 @@ const PlayallPlayer: React.FC<PlayallPlayerProps> = ( { soundcloudClientId, spot
     }
     if (playerState.request.effect === 'STOP') {
       handlePlayerCommand(players[TrackSource.SOUNDCLOUD].stop());
+      handlePlayerCommand(players[TrackSource.SPOTIFY].stop());
     }
   }, [playerState.request, playerState.queue.track]);
 

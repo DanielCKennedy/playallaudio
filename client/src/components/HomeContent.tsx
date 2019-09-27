@@ -5,6 +5,7 @@ import PlaylistList from './PlaylistList';
 import Spacer from './Spacer';
 import { TrackSource } from '../types/playerTypes';
 import SpotifyAuthNotification from './SpotifyAuthNotification';
+import TestComponent from './TestComponent';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -121,6 +122,8 @@ const HomeContent: React.FC = () => {
       <SpotifyAuthNotification />
       <Spacer />
       <PlaylistList title="Featured" />
+      <Spacer />
+      <TestComponent />
       <Spacer />
     </React.Fragment>
   );

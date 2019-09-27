@@ -28,6 +28,7 @@ class SoundcloudPlayer implements Player {
 
   start(track: Track): Promise<PlayerActualState> {
     if (this.isEnabled) {
+      console.log("start soundcloud");
       return this.soundcloudApi.stream(`/tracks/${track.details.id}`)
         .then((player: SoundCloud.Player) => {
           this.soundcloudPlayer = player;
@@ -96,8 +97,10 @@ class SoundcloudPlayer implements Player {
   }
 
   stop(): Promise<PlayerActualState> {
-    if (this.isEnabled && this.soundcloudPlayer) {
-      this.soundcloudPlayer.kill();
+    if (this.isEnabled) {
+      console.log("stop soundcloud");
+      this.soundcloudPlayer && !this.soundcloudPlayer.isDead() && this.soundcloudPlayer.pause();
+      this.soundcloudPlayer && this.soundcloudPlayer.kill();
       return new Promise((resolve) => {
         return resolve({
           position: 0,
