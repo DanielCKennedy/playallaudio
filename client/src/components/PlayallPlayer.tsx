@@ -31,6 +31,15 @@ const players: Players = {
   [TrackSource.SPOTIFY]: new SpotifyPlayer(),
 };
 
+const stopPlayer = (source: TrackSource) => {
+  players[source].isEnabled && players[source].stop();
+}
+
+const stopAllBut = (source: TrackSource) => {
+  source !== TrackSource.SOUNDCLOUD && stopPlayer(TrackSource.SOUNDCLOUD);
+  source !== TrackSource.SPOTIFY && stopPlayer(TrackSource.SPOTIFY);
+}
+
 var interval: NodeJS.Timeout;
 
 const PlayallPlayer: React.FC<PlayallPlayerProps> = ( { soundcloudClientId, spotifyAccessToken, children } ) => {
@@ -63,16 +72,13 @@ const PlayallPlayer: React.FC<PlayallPlayerProps> = ( { soundcloudClientId, spot
   // Handle player effect requests
   useEffect(() => {
     if (playerState.queue.track && players[playerState.queue.track.details.source].isEnabled) {
-      console.log(playerState.request);
-      console.log("source: " + playerState.queue.track.details.source);
       const request = playerState.request;
       const source = playerState.queue.track.details.source;
       if (request.effect !== undefined) {
         playerDispatch({ type: 'RESET_REQUEST' });
         switch (request.effect) {
           case 'START':
-            players[TrackSource.SOUNDCLOUD].isEnabled && players[TrackSource.SOUNDCLOUD].stop()
-            players[TrackSource.SPOTIFY].isEnabled && players[TrackSource.SPOTIFY].stop()
+            stopAllBut(TrackSource.SOUNDCLOUD);
             handlePlayerCommand(players[source].start(playerState.queue.track));
             break;
           case 'PLAY':
@@ -92,16 +98,16 @@ const PlayallPlayer: React.FC<PlayallPlayerProps> = ( { soundcloudClientId, spot
       }
     }
     if (playerState.request.effect === 'STOP') {
-      handlePlayerCommand(players[TrackSource.SOUNDCLOUD].stop());
-      handlePlayerCommand(players[TrackSource.SPOTIFY].stop());
+      stopAllBut(TrackSource.EMPTY);
     }
   }, [playerState.request, playerState.queue.track]);
 
   // Get updated player state while track is playing
   useEffect(() => {
-    if (playerState.player.isPlaying && playerState.queue.track && players[playerState.queue.track.details.source].isEnabled) {
+    if (playerState.queue.track && players[playerState.queue.track.details.source].isEnabled) {
       const source = playerState.queue.track.details.source;
       interval = setInterval(() => {
+        stopAllBut(source);
         handlePlayerCommand(players[source].getState());
       }, 500);
     }
@@ -109,7 +115,7 @@ const PlayallPlayer: React.FC<PlayallPlayerProps> = ( { soundcloudClientId, spot
     return () => {
       clearInterval(interval);
     }
-  }, [playerState.player.isPlaying, playerState.queue.track]);
+  }, [playerState.queue.track]);
 
   // Update progress
   useEffect(() => {

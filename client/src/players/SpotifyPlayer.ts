@@ -7,12 +7,14 @@ class SpotifyPlayer implements Player {
   player?: Spotify.SpotifyPlayer;
   isEnabled: boolean;
   isDone: boolean;
+  hasSong: boolean;
 
   constructor() {
     this.deviceId = "";
     this.accessToken = "";
     this.isEnabled = false;
     this.isDone = false;
+    this.hasSong = false;
   }
 
   private spotifyStateChanged(state: Spotify.PlaybackState | null, self: any): void {
@@ -62,6 +64,7 @@ class SpotifyPlayer implements Player {
 
   start(track: Track): Promise<PlayerActualState> {
     if (this.isEnabled && this.deviceId) {
+      this.hasSong = true;
       return fetch(`https://api.spotify.com/v1/me/player/play?device_id=${this.deviceId}`, {
         method: 'PUT',
         mode: 'cors',
@@ -130,7 +133,7 @@ class SpotifyPlayer implements Player {
 
   stop(): Promise<PlayerActualState> {
     if (this.isEnabled && this.player) {
-      this.player.pause();
+      this.hasSong && this.player.pause();
       return new Promise((resolve) => {
         return resolve({
           position: 0,
@@ -167,15 +170,15 @@ class SpotifyPlayer implements Player {
       }
       return {
         position: 0,
-        isPlaying: false,
-        isDone: true,
+        isPlaying: true,
+        isDone: false,
       }
     })
     .catch(() => {
       return {
         position: 0,
         isPlaying: false,
-        isDone: true,
+        isDone: false,
       }
     });
   }

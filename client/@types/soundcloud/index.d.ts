@@ -63,7 +63,7 @@ declare module 'soundcloud' {
         isActuallyPlaying(): boolean;
         hasErrored(): boolean;
         isDead(): boolean;
-        getState(): 'playing' | 'paused' | 'loading' | 'ended' | 'dead';
+        getState(): 'playing' | 'paused' | 'loading' | 'ended' | 'dead' | 'error';
         kill(): void;
         on(event: player_event, handler: any): void;
       }
