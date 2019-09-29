@@ -1,6 +1,7 @@
 export enum TrackSource {
   EMPTY = 'empty',
-  SOUNDCLOUD = 'soundcloud'
+  SOUNDCLOUD = 'soundcloud',
+  SPOTIFY = 'spotify'
 };
 
 export type TrackDetails = {

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Artist } from '../types/playerTypes';
+import { Artist, TrackSource } from '../types/playerTypes';
 import HorizontalList from './HorizontalList';
 import ArtistSearchCard from './ArtistSearchCard';
 import { GridListTile } from '@material-ui/core';
@@ -7,6 +7,9 @@ import { GridListTile } from '@material-ui/core';
 type ArtistListProps = {
   artists: Artist[]
 }
+
+const soundcloudOrange = "#f70"
+const spotifyGreen = "#1db954"
 
 const ArtistList: React.FC<ArtistListProps> = ({ artists }) => {
 
@@ -16,7 +19,7 @@ const ArtistList: React.FC<ArtistListProps> = ({ artists }) => {
       items={artists.map((artist: Artist) =>
         <GridListTile key={artist.id}>
           <ArtistSearchCard
-            color="#f70"
+            color={artist.source === TrackSource.SOUNDCLOUD ? soundcloudOrange : spotifyGreen}
             artist={artist}
           />
         </GridListTile>)}

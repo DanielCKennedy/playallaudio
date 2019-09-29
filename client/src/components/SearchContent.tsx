@@ -34,16 +34,36 @@ const SOUNDCLOUD_CLIENT_ID = process.env.REACT_APP_SOUNDCLOUD_CLIENT_ID;
 const soundcloud: SoundCloud = SoundCloud;
 
 type SearchContentProps = {
-  soundcloudId: string,
+  artistSearchId: string,
+  spotifyToken: string,
+  source?: string,
 }
 
-const SearchContent: React.FC<SearchContentProps> = ({ soundcloudId }) => {
+function mergeLists<T>(list1: T[], list2: T[]): T[] {
+  const maxLength = Math.max(list1.length, list2.length);
+  const mergedList: T[] = [];
+
+  for (let i = 0; i < maxLength; i++) {
+    (i < list1.length) && mergedList.push(list1[i]);
+    (i < list2.length) && mergedList.push(list2[i]);
+  }
+
+  return mergedList;
+}
+
+const SearchContent: React.FC<SearchContentProps> = ({ source, artistSearchId, spotifyToken }) => {
   const classes = useStyles();
   const [searchText, setSearchText] = useState("");
   const [artistList, setArtistList] = useState<Artist[]>([]);
   const [trackList, setTrackList] = useState<Track[]>([]);
-  const lastArtistPromise = useRef();
-  const lastTrackPromise = useRef();
+  const [soundcloudTrackList, setSoundcloudTrackList] = useState<Track[]>([]);
+  const [spotifyTrackList, setSpotifyTrackList] = useState<Track[]>([]);
+  const [soundcloudArtistList, setSoundcloudArtistList] = useState<Artist[]>([]);
+  const [spotifyArtistList, setSpotifyArtistList] = useState<Artist[]>([]);
+  const lastArtistPromiseSoundcloud = useRef();
+  const lastArtistPromiseSpotify = useRef<Promise<Response>>();
+  const lastTrackPromiseSoundcloud = useRef();
+  const lastTrackPromiseSpotify = useRef<Promise<Response>>();
 
   useEffect(() => {
     SOUNDCLOUD_CLIENT_ID && soundcloud.initialize({
@@ -52,17 +72,30 @@ const SearchContent: React.FC<SearchContentProps> = ({ soundcloudId }) => {
   }, []);
 
   useEffect(() => {
-    soundcloudId && getArtistTracks(soundcloudId);
-
-  }, [soundcloudId]);
+    if (source && artistSearchId) {
+      source === TrackSource.SOUNDCLOUD && searchSoundcloudArtistId(artistSearchId);
+      source === TrackSource.SPOTIFY && spotifyToken && searchSpotifyArtistId(artistSearchId, spotifyToken);
+    }
+  }, [source, artistSearchId, spotifyToken]);
 
   useEffect(() => {
-    searchText && searchArtists(searchText);
-    searchText && searchTracks(searchText);
-    
-  }, [searchText]);
+    setTrackList(mergeLists<Track>(soundcloudTrackList, spotifyTrackList));
+  }, [soundcloudTrackList, spotifyTrackList]);
 
-  const getArtistTracks = (id: string) => {
+  useEffect(() => {
+    setArtistList(mergeLists<Artist>(soundcloudArtistList, spotifyArtistList));
+  }, [soundcloudArtistList, spotifyArtistList]);
+
+  useEffect(() => {
+    if (searchText) {
+      searchArtistsSoundcloud(searchText);
+      spotifyToken && searchArtistsSpotify(searchText, spotifyToken);
+      searchTracksSoundcloud(searchText);
+      spotifyToken && searchTracksSpotify(searchText, spotifyToken);
+    }
+  }, [searchText, spotifyToken]);
+
+  const searchSoundcloudArtistId = (id: string) => {
     soundcloud.get(`/tracks`, {
       user_id: id,
     }).then((tracks: SoundCloud.Track[]) => {
@@ -85,17 +118,45 @@ const SearchContent: React.FC<SearchContentProps> = ({ soundcloudId }) => {
     });
   };
 
-  const searchTracks = (query: string) => {
+  const searchSpotifyArtistId = (id: string, accessToken: string) => {
+    fetch(`https://api.spotify.com/v1/artists/${id}/top-tracks?country=US`, {
+      method: 'GET',
+      mode: 'cors',
+      cache: 'no-cache',
+      headers: {
+          Authorization: `Bearer ${accessToken}`
+      }
+    }).then((res: Response) => {
+      res.json().then((data: SpotifyApi.MultipleTracksResponse) => {
+        var newTrackList: Track[] = [];
+        data.tracks.forEach((track: SpotifyApi.TrackObjectFull) => {
+          newTrackList.push(createTrack({
+            id: track.id,
+            title: track.name,
+            artists: track.artists.map(artist => artist.name),
+            duration: track.duration_ms,
+            artwork: track.album.images.length ? track.album.images[0].url : "",
+            source: TrackSource.SPOTIFY,
+            externalUrl: track.external_urls.spotify,
+          }));
+        });
+
+        setTrackList(newTrackList);
+      });
+    });
+  }
+
+  const searchTracksSoundcloud = (query: string) => {
     const currentPromise = soundcloud.get('/tracks', {
       q: query,
       limit: 20,
     });
-    
-    lastTrackPromise.current = currentPromise;
-    
+
+    lastTrackPromiseSoundcloud.current = currentPromise;
+
     currentPromise.then((tracks: SoundCloud.Track[]) => {
       var newTrackList: Track[] = [];
-      tracks.map((track: SoundCloud.Track) => {
+      tracks.forEach((track: SoundCloud.Track) => {
         newTrackList.push(createTrack({
           id: track.id.toString(),
           title: track.title,
@@ -105,24 +166,59 @@ const SearchContent: React.FC<SearchContentProps> = ({ soundcloudId }) => {
           source: TrackSource.SOUNDCLOUD,
           externalUrl: track.permalink_url,
         }));
-
-        return track;
       });
 
       // only update if most recent
-      if (currentPromise === lastTrackPromise.current) {
-        setTrackList(newTrackList);
+      if (currentPromise === lastTrackPromiseSoundcloud.current) {
+        setSoundcloudTrackList(newTrackList);
       }
     });
   }
 
-  const searchArtists = (query: string) => {
+  const searchTracksSpotify = (query: string, accessToken: string) => {
+    const currentPromise = fetch(`https://api.spotify.com/v1/search?type=track&market=US&q=${encodeURIComponent(query)}`, {
+      method: 'GET',
+      mode: 'cors',
+      cache: 'no-cache',
+      headers: {
+          Authorization: `Bearer ${accessToken}`
+      }
+    });
+
+    lastTrackPromiseSpotify.current = currentPromise;
+
+    currentPromise.then((res: Response) => {
+      res.json().then((data: SpotifyApi.TrackSearchResponse) => {
+        if (data.tracks) {
+          var newTrackList: Track[] = [];
+          data.tracks.items.forEach((track: SpotifyApi.TrackObjectFull) => {
+            newTrackList.push(createTrack({
+              id: track.id,
+              title: track.name,
+              artists: track.artists.map(artist => artist.name),
+              duration: track.duration_ms,
+              artwork: track.album.images.length ? track.album.images[0].url : "",
+              source: TrackSource.SPOTIFY,
+              externalUrl: track.external_urls.spotify,
+            }));
+          });
+
+          // only update if most recent
+          if (currentPromise === lastTrackPromiseSpotify.current) {
+            setSpotifyTrackList(newTrackList);
+          }
+        }
+      });
+    });
+  }
+
+  const searchArtistsSoundcloud = (query: string) => {
     const currentPromise = soundcloud.get('/users', {
       q: query,
       limit: 20,
     });
     
-    lastArtistPromise.current = currentPromise;
+    lastArtistPromiseSoundcloud.current = currentPromise;
     
     currentPromise.then((users: SoundCloud.User[]) => {
       var artists: Artist[] = [];
@@ -139,11 +235,47 @@ const SearchContent: React.FC<SearchContentProps> = ({ soundcloudId }) => {
       });
 
       // only update if most recent
-      if (currentPromise === lastArtistPromise.current && artists.length) {
-        setArtistList(artists);
+      if (currentPromise === lastArtistPromiseSoundcloud.current && artists.length) {
+        setSoundcloudArtistList(artists);
       }
     });
   };
+
+  const searchArtistsSpotify = (query: string, accessToken: string) => {
+    const currentPromise = fetch(`https://api.spotify.com/v1/search?type=artist&market=US&q=${encodeURIComponent(query)}`, {
+      method: 'GET',
+      mode: 'cors',
+      cache: 'no-cache',
+      headers: {
+          Authorization: `Bearer ${accessToken}`
+      }
+    });
+    
+    lastArtistPromiseSpotify.current = currentPromise;
+
+    currentPromise.then((res: Response) => {
+      res.json().then((data: SpotifyApi.ArtistSearchResponse) => {
+        if (data.artists) {
+          var artists: Artist[] = [];
+          data.artists.items.forEach((artist: SpotifyApi.ArtistObjectFull) => {
+            if (artist.followers.total > 100) {
+              artists.push({
+                id: artist.id,
+                name: artist.name,
+                artwork: artist.images.length ? artist.images[0].url : "",
+                source: TrackSource.SPOTIFY,
+              })
+            }
+          });
+
+          // only update if most recent
+          if (currentPromise === lastArtistPromiseSpotify.current) {
+            setSpotifyArtistList(artists);
+          }
+        }
+      });
+    });
+  }
 
   return (
     <React.Fragment>

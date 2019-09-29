@@ -12,10 +12,12 @@ class SoundcloudPlayer implements Player {
   soundcloudApi: SoundCloud;
   soundcloudPlayer?: SoundCloud.Player;
   isEnabled: boolean;
+  isDone: boolean;
 
   constructor(soundcloudApi: SoundCloud) {
     this.soundcloudApi = soundcloudApi;
     this.isEnabled = false;
+    this.isDone = false;
   }
 
   init(clientId: string): void {
@@ -33,6 +35,7 @@ class SoundcloudPlayer implements Player {
           this.soundcloudPlayer = player;
           this.soundcloudPlayer.play();
           this.soundcloudPlayer.on('finish', () => {
+            this.isDone = true;
             if (this.soundcloudPlayer) {
               this.soundcloudPlayer.kill();
             }
@@ -96,8 +99,9 @@ class SoundcloudPlayer implements Player {
   }
 
   stop(): Promise<PlayerActualState> {
-    if (this.isEnabled && this.soundcloudPlayer) {
-      this.soundcloudPlayer.kill();
+    if (this.isEnabled) {
+      this.soundcloudPlayer && !this.soundcloudPlayer.isDead() && this.soundcloudPlayer.pause();
+      this.soundcloudPlayer && this.soundcloudPlayer.kill();
       return new Promise((resolve) => {
         return resolve({
           position: 0,
@@ -114,6 +118,14 @@ class SoundcloudPlayer implements Player {
 
   getState(): Promise<PlayerActualState> {
     if (this.isEnabled && this.soundcloudPlayer) {
+      if (this.isDone) {
+        this.isDone = false;
+        return createPromiseState({
+          position: 0,
+          isPlaying: false,
+          isDone: true,
+        })
+      }
       const position = this.soundcloudPlayer.currentTime();
       switch (this.soundcloudPlayer.getState()) {
         case "playing":
@@ -128,10 +140,14 @@ class SoundcloudPlayer implements Player {
             isPlaying: false,
             isDone: false,
           });
-        case "ended":
+        case "ended" || "error":
           return this.stop();
         default:
-          return this.stop();
+          return createPromiseState({
+            position: 0,
+            isPlaying: false,
+            isDone: false,
+          });
       }
     }
     else {

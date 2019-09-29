@@ -6,6 +6,7 @@ import SoundcloudPlayer from '../players/SoundcloudPlayer';
 import { PlayerAction, TrackSource, PlayerActualState, Progress, TrackDetails, ControlState, Queue } from '../types/playerTypes';
 import { emptyPlayerState, emptyProgress, emptyTrackDetails, emptyControlState, emptyQueue } from '../constants/playerConstants';
 import EmptyPlayer from '../players/EmptyPlayer';
+import SpotifyPlayer from '../players/SpotifyPlayer';
 
 export const PlayerDispatchContext = React.createContext<React.Dispatch<PlayerAction>>((playerAction: PlayerAction) => {});
 export const ProgressContext = React.createContext<Progress>(emptyProgress);
@@ -15,21 +16,33 @@ export const QueueContext = React.createContext<Queue>(emptyQueue);
 
 type PlayallPlayerProps = {
   soundcloudClientId?: string,
+  spotifyAccessToken?: string,
 }
 
 type Players = {
   [TrackSource.EMPTY]: Player,
-  [TrackSource.SOUNDCLOUD]: Player
+  [TrackSource.SOUNDCLOUD]: Player,
+  [TrackSource.SPOTIFY]: Player,
 }
 
 const players: Players = {
   [TrackSource.EMPTY]: new EmptyPlayer(),
   [TrackSource.SOUNDCLOUD]: new SoundcloudPlayer(SoundCloud),
+  [TrackSource.SPOTIFY]: new SpotifyPlayer(),
 };
+
+const stopPlayer = (source: TrackSource) => {
+  players[source].isEnabled && players[source].stop();
+}
+
+const stopAllBut = (source: TrackSource) => {
+  source !== TrackSource.SOUNDCLOUD && stopPlayer(TrackSource.SOUNDCLOUD);
+  source !== TrackSource.SPOTIFY && stopPlayer(TrackSource.SPOTIFY);
+}
 
 var interval: NodeJS.Timeout;
 
-const PlayallPlayer: React.FC<PlayallPlayerProps> = ( { soundcloudClientId, children } ) => {
+const PlayallPlayer: React.FC<PlayallPlayerProps> = ( { soundcloudClientId, spotifyAccessToken, children } ) => {
   const [playerState, playerDispatch] = useReducer(playerReducer, emptyPlayerState);
   const [progress, setProgress] = useState<Progress>(emptyProgress);
   
@@ -49,6 +62,13 @@ const PlayallPlayer: React.FC<PlayallPlayerProps> = ( { soundcloudClientId, chil
     }
   }, [soundcloudClientId]);
 
+  // Initialize spotify player
+  useEffect(() => {
+    if (spotifyAccessToken && !players[TrackSource.SPOTIFY].isEnabled) {
+      players[TrackSource.SPOTIFY].init(spotifyAccessToken);
+    }
+  }, [spotifyAccessToken]);
+
   // Handle player effect requests
   useEffect(() => {
     if (playerState.queue.track && players[playerState.queue.track.details.source].isEnabled) {
@@ -58,6 +78,7 @@ const PlayallPlayer: React.FC<PlayallPlayerProps> = ( { soundcloudClientId, chil
         playerDispatch({ type: 'RESET_REQUEST' });
         switch (request.effect) {
           case 'START':
+            stopAllBut(TrackSource.SOUNDCLOUD);
             handlePlayerCommand(players[source].start(playerState.queue.track));
             break;
           case 'PLAY':
@@ -77,15 +98,16 @@ const PlayallPlayer: React.FC<PlayallPlayerProps> = ( { soundcloudClientId, chil
       }
     }
     if (playerState.request.effect === 'STOP') {
-      handlePlayerCommand(players[TrackSource.SOUNDCLOUD].stop());
+      stopAllBut(TrackSource.EMPTY);
     }
   }, [playerState.request, playerState.queue.track]);
 
   // Get updated player state while track is playing
   useEffect(() => {
-    if (playerState.player.isPlaying && playerState.queue.track && players[playerState.queue.track.details.source].isEnabled) {
+    if (playerState.queue.track && players[playerState.queue.track.details.source].isEnabled) {
       const source = playerState.queue.track.details.source;
       interval = setInterval(() => {
+        stopAllBut(source);
         handlePlayerCommand(players[source].getState());
       }, 500);
     }
@@ -93,7 +115,7 @@ const PlayallPlayer: React.FC<PlayallPlayerProps> = ( { soundcloudClientId, chil
     return () => {
       clearInterval(interval);
     }
-  }, [playerState.player.isPlaying, playerState.queue.track]);
+  }, [playerState.queue.track]);
 
   // Update progress
   useEffect(() => {

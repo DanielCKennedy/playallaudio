@@ -4,13 +4,25 @@ import SearchContent from './SearchContent';
 import { RouteComponentProps } from 'react-router-dom';
 
 type MatchProps = {
-  soundcloudId: string;
+  source: string;
+  id: string;
 };
 
-const SearchPage: React.FC<RouteComponentProps<MatchProps>> = ({ match }) => {
+type SearchPageProps = {
+  route: RouteComponentProps<MatchProps>,
+  spotifyToken: string;
+}
+
+const SearchPage: React.FC<SearchPageProps> = ({ route, spotifyToken }) => {
 
   return (
-    <PageTemplate content={<SearchContent soundcloudId={match.params.soundcloudId}/>} />
+    <PageTemplate content={
+      <SearchContent
+        artistSearchId={route.match.params.id}
+        source={route.match.params.source}
+        spotifyToken={spotifyToken}
+      />
+    } />
   );
 };
 
