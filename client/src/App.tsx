@@ -88,7 +88,11 @@ const App: React.FC = () => {
           <div className={classes.app}>
             <div className={classes.mainArea}>
               <Switch>
-                <Route exact path="/" component={HomePage} />
+                <Route 
+                  exact
+                  path="/"
+                  render={(route) => <HomePage {...route} spotifyToken={spotifyToken} />}
+                />
                 <Route exact path="/queue" component={QueuePage} />
                 <Route
                   exact

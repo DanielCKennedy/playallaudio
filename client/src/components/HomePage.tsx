@@ -3,12 +3,16 @@ import PageTemplate from './PageTemplate';
 import HomeContent from './HomeContent';
 import LandingHeader from './LandingHeader';
 
-const HomePage: React.FC = () => {
+type HomePageProps = {
+  spotifyToken: string;
+};
+
+const HomePage: React.FC<HomePageProps> = ({ spotifyToken }) => {
 
   return (
     <PageTemplate
       header={<LandingHeader />}
-      content={<HomeContent />}
+      content={<HomeContent spotifyToken={spotifyToken} />}
     />
   );
 };

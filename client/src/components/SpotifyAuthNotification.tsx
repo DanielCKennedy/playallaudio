@@ -1,11 +1,26 @@
 import React from 'react';
-import { makeStyles, createStyles, Theme } from '@material-ui/core';
+import { makeStyles, createStyles, Theme, Button, Typography } from '@material-ui/core';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-
-    }
+      width: '100%',
+      border: '8px solid #1db954',
+      borderRadius: 20,
+      padding: "0px 10px",
+      display: 'flex',
+      flexDirection: 'row',
+    },
+    verticallyCenter: {
+      position: 'relative',
+      height: '100%',
+      display: 'flex',
+      justifyContent: 'center',
+      flexDirection: 'column',
+      minHeight: '100px',
+      textAlign: 'center',
+      margin: 5,
+    },
   })
 );
 
@@ -39,7 +54,19 @@ const SpotifyAuthNotification: React.FC = () => {
 
   return (
     <div className={classes.root}>
-      <button onClick={() => requestSpotifyAuth()}>Spotify Auth</button>
+      <div className={classes.verticallyCenter}>
+        <img src={require("../assets/Spotify_Icon_RGB_Green.png")} height={55} alt="spotify" />
+      </div>
+      <div className={classes.verticallyCenter}>
+        <Button variant="outlined" color="secondary" onClick={() => requestSpotifyAuth()}>
+          Log in
+        </Button>
+      </div>
+      <div className={classes.verticallyCenter}>
+        <Typography color="secondary" variant="h6">
+          Authenticate with a Spotify Premium account to gain access to music from Spotify
+        </Typography>
+      </div>
     </div>
   );
 };

@@ -5,7 +5,6 @@ import PlaylistList from './PlaylistList';
 import Spacer from './Spacer';
 import { TrackSource } from '../types/playerTypes';
 import SpotifyAuthNotification from './SpotifyAuthNotification';
-import TestComponent from './TestComponent';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -91,7 +90,11 @@ const artistItems = [
   }
 ]
 
-const HomeContent: React.FC = () => {
+type HomeContentProps = {
+  spotifyToken: string;
+};
+
+const HomeContent: React.FC<HomeContentProps> = ({ spotifyToken }) => {
   const classes = useStyles();
 
   return (
@@ -119,11 +122,12 @@ const HomeContent: React.FC = () => {
         )}
       </ul>
       <Spacer />
-      <SpotifyAuthNotification />
-      <Spacer />
+      {!spotifyToken && 
+      <React.Fragment>
+        <SpotifyAuthNotification />
+        <Spacer />
+      </React.Fragment>}
       <PlaylistList title="Featured" />
-      <Spacer />
-      <TestComponent />
       <Spacer />
     </React.Fragment>
   );
