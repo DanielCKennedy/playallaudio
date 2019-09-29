@@ -3,6 +3,7 @@ import { makeStyles, Theme, createStyles, Hidden } from '@material-ui/core';
 import ProgressSlider from './ProgressSlider';
 import MediaNowPlaying from './MediaNowPlaying';
 import MediaControls from './MediaControls';
+import MediaAccessories from './MediaAccessories';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -62,7 +63,7 @@ const MediaBar: React.FC = () => {
         </div>
         <Hidden xsDown>
           <div className={`${classes.end} ${classes.mediaItem} ${classes.verticallyCenter}`}>
-
+            <MediaAccessories />
           </div>
         </Hidden>
       </div>

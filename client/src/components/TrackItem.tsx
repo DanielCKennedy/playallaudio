@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Track } from '../types/playerTypes';
+import { Track, TrackSource } from '../types/playerTypes';
 import { makeStyles, Theme, createStyles, IconButton, ListItem, ListItemAvatar, ListItemText, ListItemSecondaryAction } from '@material-ui/core';
 import QueueRoundedIcon from '@material-ui/icons/QueueRounded';
 import { PlayerDispatchContext, TrackDetailsContext } from './PlayallPlayer';
@@ -19,6 +19,15 @@ const useStyles = makeStyles((theme: Theme) =>
         backgroundColor: '#ffffff11',
       }
     },
+    secondary: {
+      alignItems: 'center',
+      width: '100%',
+      display: 'flex',
+    },
+    spotifyImg: {
+      position: 'relative',
+      left: -6,
+    }
   }),
 );
 
@@ -49,9 +58,13 @@ const TrackItem: React.FC<TrackItemProps> = ({ track, onClick }) => {
       </ListItemAvatar>
       <ListItemText primary={track.details.title} secondary={track.details.artists.join(", ")} />
       <ListItemSecondaryAction>
-        <IconButton aria-label="Add to queue" color="secondary" className={classes.hover} onClick={addToQueue}>
-          <QueueRoundedIcon />
-        </IconButton>
+        <div className={classes.secondary}>
+          {track.details.source === TrackSource.SOUNDCLOUD && <img src={require("../assets/logo_big_white-soundcloud.png")} height={25} alt="soundcloud"/>}
+          {track.details.source === TrackSource.SPOTIFY && <img className={classes.spotifyImg} src={require("../assets/Spotify_Icon_RGB_White.png")} height={25} alt="spotify"/>}
+          <IconButton aria-label="Add to queue" color="secondary" className={classes.hover} onClick={addToQueue}>
+            <QueueRoundedIcon />
+          </IconButton>
+        </div>
       </ListItemSecondaryAction>
     </ListItem>
   );
