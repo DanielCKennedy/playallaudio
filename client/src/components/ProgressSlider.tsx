@@ -4,7 +4,7 @@ import { Slider, withStyles } from '@material-ui/core';
 
 const PlayallSlider = withStyles({
   root: {
-    color: 'white',
+    color: 'hsla(290, 70%, 40%, 1)',
     padding: 0,
     margin: 0,
     paddingBottom: 8,
@@ -17,7 +17,7 @@ const PlayallSlider = withStyles({
   },
   rail: {
     height: 8,
-    color: 'white',
+    color: 'hsla(290, 70%, 40%, 1)',
   },
 })(Slider);
 

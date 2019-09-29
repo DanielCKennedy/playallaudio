@@ -1,5 +1,5 @@
 import React from 'react';
-import { makeStyles, Theme, createStyles, IconButton } from '@material-ui/core';
+import { makeStyles, Theme, createStyles, IconButton, Tooltip } from '@material-ui/core';
 import HomeRoundedIcon from '@material-ui/icons/HomeRounded';
 import SearchRoundedIcon from '@material-ui/icons/SearchRounded';
 import QueueMusicRoundedIcon from '@material-ui/icons/QueueMusicRounded';
@@ -37,6 +37,11 @@ const useStyles = makeStyles((theme: Theme) =>
         textDecoration: 'none',
       }
     },
+    hover: {
+      "&:hover": {
+        backgroundColor: '#ffffff11',
+      }
+    },
   })
 );
 
@@ -45,21 +50,34 @@ const NavBar: React.FC = () => {
 
   return (
     <div className={classes.root}>
-      <Link to="/" className={classes.link}>
-        <IconButton color="secondary">
-          <HomeRoundedIcon fontSize="large" />
-        </IconButton>
-      </Link>
-      <Link to="/queue" className={classes.link}>
-        <IconButton color="secondary">
-          <QueueMusicRoundedIcon fontSize="large" />
-        </IconButton>
-      </Link>
-      <Link to="/search" className={classes.link}>
-        <IconButton color="secondary">
-          <SearchRoundedIcon fontSize="large" />
-        </IconButton>
-      </Link>
+      <Tooltip title="Home" placement="top">
+        <Link to="/" className={classes.link}>
+          <IconButton color="secondary" className={classes.hover}>
+            <HomeRoundedIcon fontSize="large" />
+          </IconButton>
+        </Link>
+      </Tooltip>
+      <Tooltip title="Search" placement="top">
+        <Link to="/search" className={classes.link}>
+          <IconButton color="secondary" className={classes.hover}>
+            <SearchRoundedIcon fontSize="large" />
+          </IconButton>
+        </Link>
+      </Tooltip>
+      <Tooltip title="Queue" placement="top">
+        <Link to="/queue" className={classes.link}>
+          <IconButton color="secondary" className={classes.hover}>
+            <QueueMusicRoundedIcon fontSize="large" />
+          </IconButton>
+        </Link>
+      </Tooltip>
+      <Tooltip title="View source code" placement="top">
+        <a href="https://github.com/DanielCKennedy/playallaudio" className={classes.link} target="_blank" rel="noopener noreferrer">
+          <IconButton color="secondary" className={classes.hover}>
+            <img src={require("../assets/GitHub-Mark-Light-64px.png")} height="35" alt="GitHub" />
+          </IconButton>
+        </a>
+      </Tooltip>
     </div>
   );
 };

@@ -31,6 +31,7 @@ const useStyles = makeStyles((theme: Theme) =>
       height: `${bottomBarHeight}px!important`,
       position: "absolute",
       bottom: 0,
+      backgroundColor: '#13161a',
     },
   })
 );

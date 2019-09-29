@@ -13,11 +13,12 @@ export const darkTheme = responsiveFontSizes(createMuiTheme({
       main: '#ffffff',
     },
     background: {
-      default: darkGray,
+      default: "#222930",
       paper: darkGray,
     },
     text: {
-      primary: "#fff"
+      primary: "#fff",
+      secondary: "#888",
     }
   },
   typography: {

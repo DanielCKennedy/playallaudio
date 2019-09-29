@@ -25,7 +25,12 @@ const useStyles = makeStyles((theme: Theme) =>
     bigIcon: {
       height: '45px',
       width: '45px',
-    }
+    },
+    hover: {
+      "&:hover": {
+        backgroundColor: '#ffffff11',
+      }
+    },
   }),
 );
 
@@ -76,23 +81,23 @@ const MediaControls: React.FC = () => {
 
   return (
     <div className={classes.root}>
-      <IconButton color="secondary" size="small" onClick={prev}>
+      <IconButton color="secondary" size="small" onClick={prev} className={classes.hover}>
         <SkipPreviousRounded fontSize="large" />
       </IconButton>
-      <IconButton color="secondary" size='small' onClick={back}>
+      <IconButton color="secondary" size='small' onClick={back} className={classes.hover}>
         <Replay10Rounded fontSize="large" />
       </IconButton>
       {controlState.isPlaying ?
-      <IconButton color="secondary" size='small' onClick={pause}>
+      <IconButton color="secondary" size='small' onClick={pause} className={classes.hover}>
         <PauseCircleOutlineRounded className={classes.bigIcon} />
       </IconButton> :
-      <IconButton color="secondary" size='small' onClick={play}>
+      <IconButton color="secondary" size='small' onClick={play} className={classes.hover}>
         <PlayCircleOutlineRounded className={classes.bigIcon} />
       </IconButton>}
-      <IconButton color="secondary" size='small' onClick={forward}>
+      <IconButton color="secondary" size='small' onClick={forward} className={classes.hover}>
         <Forward30Rounded fontSize="large" />
       </IconButton>
-      <IconButton color="secondary" size='small' onClick={next}>
+      <IconButton color="secondary" size='small' onClick={next} className={classes.hover}>
         <SkipNextRounded fontSize="large" />
       </IconButton>
     </div>

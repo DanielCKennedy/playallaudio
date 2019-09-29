@@ -8,8 +8,8 @@ type ArtistListProps = {
   artists: Artist[]
 }
 
-const soundcloudOrange = "#f70"
-const spotifyGreen = "#1db954"
+const soundcloudOrange = "#F4A740" //'#ff5500'
+const spotifyGreen = "#5ECF86" //"#1db954"
 
 const ArtistList: React.FC<ArtistListProps> = ({ artists }) => {
 
