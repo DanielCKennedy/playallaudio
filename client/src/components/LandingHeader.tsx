@@ -9,6 +9,9 @@ const useStyles = makeStyles((theme: Theme) =>
       height: 'auto',
       maxHeight: 'calc(100% - 88px)',
       overflow: 'visible',
+      [theme.breakpoints.down("xs")]: {
+        marginTop: '48px',
+      }
     },
     innerDiv: {
       width: '100%',
