@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { makeStyles, createStyles, Theme } from '@material-ui/core';
+import { makeStyles, createStyles, Theme, Tooltip, IconButton } from '@material-ui/core';
 import { TrackDetailsContext } from './PlayallPlayer';
 import { TrackSource } from '../types/playerTypes';
 
@@ -17,6 +17,11 @@ const useStyles = makeStyles((theme: Theme) =>
       justifyContent: 'center',
       flexDirection: 'column',
     },
+    hover: {
+      "&:hover": {
+        backgroundColor: '#ffffff11',
+      }
+    },
   })
 );
 
@@ -27,13 +32,21 @@ const MediaAccessories: React.FC = () => {
   return (
     <div className={`${classes.root} ${classes.verticallyCenter}`}>
       {trackDetails.source === TrackSource.SOUNDCLOUD &&
-      <a href={trackDetails.externalUrl} target="_blank" rel="noopener noreferrer">
-        <img src={require("../assets/logo_big_white-soundcloud.png")} height={35} alt="soundcloud" />
-      </a>}
+      <Tooltip title="Go to Soundcloud" placement="top">
+        <a href={trackDetails.externalUrl} target="_blank" rel="noopener noreferrer">
+          <IconButton color="secondary" className={classes.hover}>
+            <img src={require("../assets/logo_big_white-soundcloud.png")} height={35} alt="soundcloud" />
+          </IconButton>
+        </a>
+      </Tooltip>}
       {trackDetails.source === TrackSource.SPOTIFY &&
-      <a href={trackDetails.externalUrl} target="_blank" rel="noopener noreferrer">
-        <img src={require("../assets/Spotify_Icon_RGB_White.png")} height={35} alt="spotify" />
-      </a>}
+      <Tooltip title="Go to Spotify" placement="top">
+        <a href={trackDetails.externalUrl} target="_blank" rel="noopener noreferrer">
+          <IconButton color="secondary" className={classes.hover}>
+            <img src={require("../assets/Spotify_Icon_RGB_White.png")} height={35} alt="spotify" />
+          </IconButton>
+        </a>
+      </Tooltip>}
     </div>
   );
 };

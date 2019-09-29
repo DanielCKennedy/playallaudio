@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { makeStyles, createStyles, Theme, ListItem, ListItemText, ListItemSecondaryAction, IconButton, ListItemAvatar } from '@material-ui/core';
+import { makeStyles, createStyles, Theme, ListItem, ListItemText, ListItemSecondaryAction, IconButton, ListItemAvatar, Tooltip } from '@material-ui/core';
 import { Track } from '../types/playerTypes';
 import CloseRoundedIcon from '@material-ui/icons/CloseRounded';
 import { PlayerDispatchContext } from './PlayallPlayer';
@@ -59,15 +59,17 @@ const QueueTrackItem: React.FC<QueueTrackItemProps> = ({ track, selected }) => {
         secondary={track.details.artists.join(", ")}
       />
       <ListItemSecondaryAction>
-        <IconButton
-          edge="end"
-          aria-label="delete"
-          className={classes.hover}
-          color="secondary"
-          onClick={removeFromQueue}
-        >
-          <CloseRoundedIcon />
-        </IconButton>
+        <Tooltip title="Remove" placement="top">
+          <IconButton
+            edge="end"
+            aria-label="delete"
+            className={classes.hover}
+            color="secondary"
+            onClick={removeFromQueue}
+          >
+            <CloseRoundedIcon />
+          </IconButton>
+        </Tooltip>
       </ListItemSecondaryAction>
     </ListItem>
   );
