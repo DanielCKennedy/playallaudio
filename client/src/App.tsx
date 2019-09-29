@@ -90,8 +90,16 @@ const App: React.FC = () => {
               <Switch>
                 <Route exact path="/" component={HomePage} />
                 <Route exact path="/queue" component={QueuePage} />
-                <Route exact path="/search" component={SearchPage} />
-                <Route exact path="/search/soundcloud/:soundcloudId" component={SearchPage} />
+                <Route
+                  exact
+                  path="/search"
+                  render={(route) => <SearchPage {...route} route={route} spotifyToken={spotifyToken} />}
+                />
+                <Route
+                  exact
+                  path="/search/:source/:id"
+                  render={(route) => <SearchPage {...route} route={route} spotifyToken={spotifyToken} />}
+                />
                 <Route component={HomePage} />
               </Switch>
             </div>
