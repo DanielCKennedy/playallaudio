@@ -1,20 +1,19 @@
 import { createMuiTheme, responsiveFontSizes } from '@material-ui/core/styles';
 
-const darkGray = '#292c33';
-const darkerGray = '#141414';
+const darkGray = "#222930";
+const darkerGray = '#13161a';
 
 export const darkTheme = responsiveFontSizes(createMuiTheme({
   palette: {
     primary: {
-      main: darkGray,
-      dark: darkerGray,
+      main: darkerGray,
     },
     secondary: {
       main: '#ffffff',
     },
     background: {
-      default: "#222930",
-      paper: darkGray,
+      default: darkGray,
+      paper: darkerGray,
     },
     text: {
       primary: "#fff",
