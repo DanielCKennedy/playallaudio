@@ -55,6 +55,11 @@ const PlayallPlayer: React.FC<PlayallPlayerProps> = ( { soundcloudClientId, spot
     });
   }
 
+  // TODO: delete this
+  useEffect(() => {
+    console.log(playerState.queue)
+  }, [playerState.queue])
+
   // Initialize soundcloud player
   useEffect(() => {
     if (soundcloudClientId && !players[TrackSource.SOUNDCLOUD].isEnabled) {
@@ -100,7 +105,7 @@ const PlayallPlayer: React.FC<PlayallPlayerProps> = ( { soundcloudClientId, spot
     if (playerState.request.effect === 'STOP') {
       stopAllBut(TrackSource.EMPTY);
     }
-  }, [playerState.request, playerState.queue.track]);
+  }, [playerState.request, playerState.queue.track, spotifyAccessToken]);
 
   // Get updated player state while track is playing
   useEffect(() => {
