@@ -197,7 +197,7 @@ const SearchContent: React.FC<SearchContentProps> = ({ source, artistSearchId, s
               title: track.name,
               artists: track.artists.map(artist => artist.name),
               duration: track.duration_ms,
-              artwork: track.album.images.length ? track.album.images[0].url : "",
+              artwork: track.album.images.length > 1 ? track.album.images[1].url : (track.album.images.length ? track.album.images[0].url : ""),
               source: TrackSource.SPOTIFY,
               externalUrl: track.external_urls.spotify,
             }));

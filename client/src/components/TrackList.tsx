@@ -1,8 +1,9 @@
 import React, { useContext } from 'react';
 import { makeStyles, Theme, createStyles, Typography, List } from '@material-ui/core';
-import { Track, Queue } from '../types/playerTypes';
+import { Track } from '../types/playerTypes';
 import TrackItem from './TrackItem';
 import { PlayerDispatchContext } from './PlayallPlayer';
+import { createQueue } from '../utils/queueUtils';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -15,26 +16,6 @@ const useStyles = makeStyles((theme: Theme) =>
 type TrackListProps = {
   title: string,
   tracks: Track[],
-}
-
-const createQueue = (findTrack: Track, tracks: Track[]): Queue => {
-  var prevQueue: Track[] = [];
-  var nextQueue: Track[] = [];
-  var track: Track | undefined = undefined;
-
-  const index = tracks.indexOf(findTrack);
-  
-  if (index >= 0 && index < tracks.length) {
-    prevQueue = tracks.slice(0, index).reverse();
-    nextQueue = tracks.slice(index + 1, tracks.length);
-    track = tracks[index];
-  }
-
-  return {
-    track: track,
-    prev: prevQueue,
-    next: nextQueue,
-  };
 }
 
 const TrackList: React.FC<TrackListProps> = ({ title, tracks }) => {

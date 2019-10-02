@@ -127,7 +127,7 @@ const HomeContent: React.FC<HomeContentProps> = ({ spotifyToken }) => {
         <SpotifyAuthNotification />
         <Spacer />
       </React.Fragment>}
-      <PlaylistList title="Featured" />
+      <PlaylistList title="Featured" spotifyToken={spotifyToken} />
       <Spacer />
     </React.Fragment>
   );
