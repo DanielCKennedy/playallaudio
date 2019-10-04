@@ -11,7 +11,7 @@ const url = process.env.APP_URL;
 export function handler(event, context, callback) {
 
   if (!event.queryStringParameters.code) {
-    console.log("no code found");
+    console.log("Missing 'Code' parameter");
     return callback(null, {
       statusCode: 301,
       headers: {
@@ -40,6 +40,8 @@ export function handler(event, context, callback) {
     }
   })
   .then(json => {
+    console.log("SUCCESS");
+    console.log(json);
     return callback(null, {
       statusCode: 301,
       headers: {
@@ -53,6 +55,8 @@ export function handler(event, context, callback) {
     });
   })
   .catch(error => {
+    console.log("FAILURE");
+    console.log(error);
     return callback(null, {
       statusCode: 301,
       headers: {
