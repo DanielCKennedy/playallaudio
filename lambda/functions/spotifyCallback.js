@@ -1,6 +1,7 @@
 import axios from 'axios';
 import btoa from 'btoa';
 import querystring from 'querystring';
+import { URLSearchParams } from 'url';
 
 const clientId = process.env.REACT_APP_SPOTIFY_CLIENT_ID;
 const clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
