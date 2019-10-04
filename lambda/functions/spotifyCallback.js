@@ -1,7 +1,6 @@
 import axios from 'axios';
 import btoa from 'btoa';
 import querystring from 'querystring';
-import { URLSearchParams } from 'url';
 
 const clientId = process.env.REACT_APP_SPOTIFY_CLIENT_ID;
 const clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
@@ -12,6 +11,7 @@ export function handler(event, context, callback) {
 
   if (!event.queryStringParameters.code) {
     console.log("Missing 'Code' parameter");
+    
     return callback(null, {
       statusCode: 301,
       headers: {
@@ -22,7 +22,7 @@ export function handler(event, context, callback) {
   }
 
   axios.post("https://accounts.spotify.com/api/token",
-  new URLSearchParams({
+  querystring.stringify({
     grant_type: 'authorization_code',
     code: event.queryStringParameters.code,
     redirect_uri: redirectUri
@@ -40,8 +40,6 @@ export function handler(event, context, callback) {
     }
   })
   .then(json => {
-    console.log("SUCCESS");
-    console.log(json);
     return callback(null, {
       statusCode: 301,
       headers: {
@@ -55,8 +53,8 @@ export function handler(event, context, callback) {
     });
   })
   .catch(error => {
-    console.log("FAILURE");
-    console.log(error);
+    console.log("FAILURE", error);
+
     return callback(null, {
       statusCode: 301,
       headers: {
