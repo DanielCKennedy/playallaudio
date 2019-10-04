@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const SPOTIFY_CLIENT_ID = process.env.REACT_APP_SPOTIFY_CLIENT_ID;
-const SPOTIFY_CALLBACK = "http://localhost:5000/spotify/callback";
+const SPOTIFY_CALLBACK = process.env.REACT_APP_SPOTIFY_REDIRECT;
 
 function requestSpotifyAuth() {
   console.log("Requesting Spotify Auth");
@@ -43,7 +43,7 @@ function requestSpotifyAuth() {
     '?response_type=code' +
     `&client_id=${SPOTIFY_CLIENT_ID}` +
     `&scope=${encodeURIComponent(scopes.join(" "))}` +
-    `&redirect_uri=${encodeURIComponent(SPOTIFY_CALLBACK)}` +
+    `&redirect_uri=${encodeURIComponent(SPOTIFY_CALLBACK || "")}` +
     '&show_dialog=true';
   console.log(href);
   window.location.href = href;
