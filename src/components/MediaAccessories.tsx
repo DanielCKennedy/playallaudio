@@ -34,7 +34,7 @@ const MediaAccessories: React.FC = () => {
       {trackDetails.source === TrackSource.SOUNDCLOUD &&
       <Tooltip title="Go to Soundcloud" placement="top">
         <a href={trackDetails.externalUrl} target="_blank" rel="noopener noreferrer">
-          <IconButton color="secondary" className={classes.hover}>
+          <IconButton color="secondary" className={classes.hover} title="Go to Soundcloud">
             <img src={require("../assets/logo_big_white-soundcloud.png")} height={35} alt="soundcloud" />
           </IconButton>
         </a>
@@ -42,7 +42,7 @@ const MediaAccessories: React.FC = () => {
       {trackDetails.source === TrackSource.SPOTIFY &&
       <Tooltip title="Go to Spotify" placement="top">
         <a href={trackDetails.externalUrl} target="_blank" rel="noopener noreferrer">
-          <IconButton color="secondary" className={classes.hover}>
+          <IconButton color="secondary" className={classes.hover} title="Go to Spotify">
             <img src={require("../assets/Spotify_Icon_RGB_White.png")} height={35} alt="spotify" />
           </IconButton>
         </a>

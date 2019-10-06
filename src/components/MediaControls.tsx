@@ -81,23 +81,23 @@ const MediaControls: React.FC = () => {
 
   return (
     <div className={classes.root}>
-      <IconButton color="secondary" size="small" onClick={prev} className={classes.hover}>
+      <IconButton color="secondary" size="small" onClick={prev} className={classes.hover} title="Previous">
         <SkipPreviousRounded fontSize="large" />
       </IconButton>
-      <IconButton color="secondary" size='small' onClick={back} className={classes.hover}>
+      <IconButton color="secondary" size='small' onClick={back} className={classes.hover} title="Back 10">
         <Replay10Rounded fontSize="large" />
       </IconButton>
       {controlState.isPlaying ?
-      <IconButton color="secondary" size='small' onClick={pause} className={classes.hover}>
+      <IconButton color="secondary" size='small' onClick={pause} className={classes.hover} title="Pause">
         <PauseCircleOutlineRounded className={classes.bigIcon} />
       </IconButton> :
-      <IconButton color="secondary" size='small' onClick={play} className={classes.hover}>
+      <IconButton color="secondary" size='small' onClick={play} className={classes.hover} title="Play">
         <PlayCircleOutlineRounded className={classes.bigIcon} />
       </IconButton>}
-      <IconButton color="secondary" size='small' onClick={forward} className={classes.hover}>
+      <IconButton color="secondary" size='small' onClick={forward} className={classes.hover} title="Forward 30">
         <Forward30Rounded fontSize="large" />
       </IconButton>
-      <IconButton color="secondary" size='small' onClick={next} className={classes.hover}>
+      <IconButton color="secondary" size='small' onClick={next} className={classes.hover} title="Next">
         <SkipNextRounded fontSize="large" />
       </IconButton>
     </div>

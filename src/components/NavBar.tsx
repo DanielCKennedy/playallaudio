@@ -52,28 +52,28 @@ const NavBar: React.FC = () => {
     <div className={classes.root}>
       <Tooltip title="Home" placement="top">
         <Link to="/" className={classes.link}>
-          <IconButton color="secondary" className={classes.hover}>
+          <IconButton color="secondary" className={classes.hover} title="Home">
             <HomeRoundedIcon fontSize="large" />
           </IconButton>
         </Link>
       </Tooltip>
       <Tooltip title="Search" placement="top">
         <Link to="/search" className={classes.link}>
-          <IconButton color="secondary" className={classes.hover}>
+          <IconButton color="secondary" className={classes.hover} title="Search">
             <SearchRoundedIcon fontSize="large" />
           </IconButton>
         </Link>
       </Tooltip>
       <Tooltip title="Queue" placement="top">
         <Link to="/queue" className={classes.link}>
-          <IconButton color="secondary" className={classes.hover}>
+          <IconButton color="secondary" className={classes.hover} title="Queue">
             <QueueMusicRoundedIcon fontSize="large" />
           </IconButton>
         </Link>
       </Tooltip>
       <Tooltip title="View source code" placement="top">
         <a href="https://github.com/DanielCKennedy/playallaudio" className={classes.link} target="_blank" rel="noopener noreferrer">
-          <IconButton color="secondary" className={classes.hover}>
+          <IconButton color="secondary" className={classes.hover} title="View source code">
             <img src={require("../assets/GitHub-Mark-Light-64px.png")} height="35" alt="GitHub" />
           </IconButton>
         </a>
