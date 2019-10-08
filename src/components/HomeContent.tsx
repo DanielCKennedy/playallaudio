@@ -5,6 +5,8 @@ import PlaylistList from './PlaylistList';
 import Spacer from './Spacer';
 import { TrackSource } from '../types/playerTypes';
 import SpotifyAuthNotification from './SpotifyAuthNotification';
+import SpotifyBrowserSupportNotification from './SpotifyBrowserSupportNotification';
+import SoundcloudBrowserSupportNotification from './SoundcloudBrowserSupportNotification';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -92,9 +94,11 @@ const artistItems = [
 
 type HomeContentProps = {
   spotifyToken: string;
+  spotifySupport: boolean;
+  soundcloudSupport: boolean;
 };
 
-const HomeContent: React.FC<HomeContentProps> = ({ spotifyToken }) => {
+const HomeContent: React.FC<HomeContentProps> = ({ spotifyToken, spotifySupport, soundcloudSupport }) => {
   const classes = useStyles();
 
   return (
@@ -122,7 +126,17 @@ const HomeContent: React.FC<HomeContentProps> = ({ spotifyToken }) => {
         )}
       </ul>
       <Spacer />
-      {!spotifyToken && 
+      {!spotifySupport &&
+      <React.Fragment>
+        <SpotifyBrowserSupportNotification />
+        <Spacer />
+      </React.Fragment>}
+      {!soundcloudSupport &&
+      <React.Fragment>
+        <SoundcloudBrowserSupportNotification />
+        <Spacer />
+      </React.Fragment>}
+      {!spotifyToken && spotifySupport && 
       <React.Fragment>
         <SpotifyAuthNotification />
         <Spacer />

@@ -55,11 +55,6 @@ const PlayallPlayer: React.FC<PlayallPlayerProps> = ( { soundcloudClientId, spot
     });
   }
 
-  // TODO: delete this
-  useEffect(() => {
-    console.log(playerState.queue)
-  }, [playerState.queue])
-
   // Initialize soundcloud player
   useEffect(() => {
     if (soundcloudClientId && !players[TrackSource.SOUNDCLOUD].isEnabled) {
