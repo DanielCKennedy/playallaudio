@@ -25,13 +25,15 @@ const useStyles = makeStyles((theme: Theme) =>
       height: `calc(100% - ${bottomBarHeight}px)`,
       overflowX: 'hidden',
       overflowY: 'auto',
+      WebkitOverflowScrolling: 'touch',
     },
     bottomBar: {
       width: '100%',
       height: `${bottomBarHeight}px!important`,
-      position: "absolute",
+      position: "fixed",
       bottom: 0,
       backgroundColor: '#13161a',
+      zIndex: 2,
     },
   })
 );
