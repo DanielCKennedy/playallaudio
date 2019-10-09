@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import SearchRoundedIcon from '@material-ui/icons/SearchRounded';
-import { TextField, makeStyles, Theme, createStyles } from '@material-ui/core';
+import { TextField, makeStyles, Theme, createStyles, Hidden } from '@material-ui/core';
 import SoundCloud from 'soundcloud';
 import { Artist, TrackSource, Track } from '../types/playerTypes';
 import ArtistList from './ArtistList';
@@ -9,6 +9,7 @@ import TrackList from './TrackList';
 import { createTrack } from '../utils/trackUtils';
 
 const searchHeight = 100;
+const smallSearchHeight = 50;
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -23,9 +24,17 @@ const useStyles = makeStyles((theme: Theme) =>
       position: 'relative',
       top: 10,
       marginRight: 5,
+      fontSize: searchHeight,
+      [theme.breakpoints.down("xs")]: {
+        fontSize: smallSearchHeight,
+        top: 15,
+      }
     },
     searchBox: {
       height: searchHeight,
+      [theme.breakpoints.down("xs")]: {
+        height: smallSearchHeight,
+      }
     },
   }),
 );
@@ -51,6 +60,18 @@ function mergeLists<T>(list1: T[], list2: T[]): T[] {
   return mergedList;
 }
 
+const onEnterPress = (e: any) => {
+  // on enter key pressed
+  if (e.keyCode === 13) {
+    const elem = document.getElementById(searchTextId);
+    if (elem) {
+      elem.blur();
+    }
+  }
+};
+
+const searchTextId = "searchTextField";
+
 const SearchContent: React.FC<SearchContentProps> = ({ source, artistSearchId, spotifyToken }) => {
   const classes = useStyles();
   const [searchText, setSearchText] = useState("");
@@ -69,6 +90,13 @@ const SearchContent: React.FC<SearchContentProps> = ({ source, artistSearchId, s
     SOUNDCLOUD_CLIENT_ID && soundcloud.initialize({
       client_id: SOUNDCLOUD_CLIENT_ID
     });
+
+    // unfocus text field when user presses enter
+    window.addEventListener("keydown", onEnterPress);
+
+    return () => {
+      window.removeEventListener("keydown", onEnterPress);
+    }
   }, []);
 
   useEffect(() => {
@@ -280,34 +308,58 @@ const SearchContent: React.FC<SearchContentProps> = ({ source, artistSearchId, s
   return (
     <React.Fragment>
       <div className={classes.searchContainer}>
-        <SearchRoundedIcon
-          className={classes.searchIcon}
-          style={{ fontSize: 100 }}
-        />
+        <SearchRoundedIcon className={classes.searchIcon} />
         <div className={classes.searchTextFieldContainer}>
-          <TextField
-            className={classes.searchBox}
-            value={searchText}
-            onChange={e => setSearchText(e.target.value)}
-            id="searchArtists"
-            label="Search"
-            fullWidth
-            autoComplete="off"
-            placeholder="Search..."
-            autoFocus
-            InputProps={{
-              style: {
-                height: searchHeight,
-                fontSize: 55,
-                color: 'white',
-              }
-            }}
-            InputLabelProps={{
-              style: {
-                display: 'none',
-              }
-            }}
-          />
+          <Hidden xsDown>
+            <TextField
+              className={classes.searchBox}
+              value={searchText}
+              onChange={e => setSearchText(e.target.value)}
+              id={searchTextId}
+              label="Search"
+              fullWidth
+              autoComplete="off"
+              placeholder="Search..."
+              autoFocus
+              InputProps={{
+                style: {
+                  height: searchHeight,
+                  fontSize: 55,
+                  color: 'white',
+                }
+              }}
+              InputLabelProps={{
+                style: {
+                  display: 'none',
+                }
+              }}
+            />
+          </Hidden>
+          <Hidden smUp>
+            <TextField
+              className={classes.searchBox}
+              value={searchText}
+              onChange={e => setSearchText(e.target.value)}
+              id={searchTextId}
+              label="Search"
+              fullWidth
+              autoComplete="off"
+              placeholder="Search..."
+              autoFocus
+              InputProps={{
+                style: {
+                  height: smallSearchHeight,
+                  fontSize: 35,
+                  color: 'white',
+                }
+              }}
+              InputLabelProps={{
+                style: {
+                  display: 'none',
+                }
+              }}
+            />
+          </Hidden>
         </div>
       </div>
       <Spacer />

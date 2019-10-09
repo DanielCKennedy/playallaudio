@@ -21,6 +21,9 @@ const useStyles = makeStyles((theme: Theme) =>
       textAlign: 'center',
       margin: 5,
     },
+    button: {
+      minWidth: 85,
+    }
   })
 );
 
@@ -58,13 +61,13 @@ const SpotifyAuthNotification: React.FC = () => {
         <img src={require("../assets/Spotify_Icon_RGB_Green.png")} height={55} alt="spotify" />
       </div>
       <div className={classes.verticallyCenter}>
-        <Button variant="outlined" color="secondary" onClick={() => requestSpotifyAuth()}>
+        <Button variant="outlined" color="secondary" onClick={() => requestSpotifyAuth()} className={classes.button} >
           Log in
         </Button>
       </div>
       <div className={classes.verticallyCenter}>
         <Typography color="secondary" variant="h6">
-          Authenticate with a Spotify Premium account to gain access to music from Spotify
+          Authenticate with a Spotify Premium account to gain access to music from Spotify.
         </Typography>
       </div>
     </div>

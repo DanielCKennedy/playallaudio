@@ -8,6 +8,8 @@ import HomePage from './components/HomePage';
 import SearchPage from './components/SearchPage';
 import MediaBar from './components/MediaBar';
 import QueuePage from './components/QueuePage';
+import is from 'is_js';
+import { StaticContext, RouteComponentProps } from 'react-router';
 
 const bottomBarHeight = 90;
 
@@ -25,13 +27,15 @@ const useStyles = makeStyles((theme: Theme) =>
       height: `calc(100% - ${bottomBarHeight}px)`,
       overflowX: 'hidden',
       overflowY: 'auto',
+      WebkitOverflowScrolling: 'touch',
     },
     bottomBar: {
       width: '100%',
       height: `${bottomBarHeight}px!important`,
-      position: "absolute",
+      position: "fixed",
       bottom: 0,
       backgroundColor: '#13161a',
+      zIndex: 2,
     },
   })
 );
@@ -70,14 +74,27 @@ const addSpotifySdkToDom = () => {
 const App: React.FC = () => {
   const classes = useStyles();
   const [spotifyToken, setSpotifyToken] = useState("");
+  const [isSpotifySupported, setSpotifySupport] = useState(false);
+  const [isSoundcloudSupported, setSoundcloudSupport] = useState(true);
+
+  const homePageRender = (route: RouteComponentProps<any, StaticContext, any>) => <HomePage {...route} spotifyToken={spotifyToken} spotifySupport={isSpotifySupported} soundcloudSupport={isSoundcloudSupported} />
+  const searchPageRender = (route: RouteComponentProps<any, StaticContext, any>) => <SearchPage {...route} route={route} spotifyToken={spotifyToken} />
 
   useEffect(() => {
-    const spotifyAccessToken = decodeSpotifyToken();
-    if (spotifyAccessToken) {
-      window.onSpotifyWebPlaybackSDKReady = () => {
-        setSpotifyToken(spotifyAccessToken);
+    if (is.not.safari() && is.not.mobile()) {
+      setSpotifySupport(true);
+
+      const spotifyAccessToken = decodeSpotifyToken();
+      if (spotifyAccessToken) {
+        window.onSpotifyWebPlaybackSDKReady = () => {
+          setSpotifyToken(spotifyAccessToken);
+        }
+        addSpotifySdkToDom();
       }
-      addSpotifySdkToDom();
+    }
+
+    if (is.ios() && (is.mobile() || is.ipad())) {
+      setSoundcloudSupport(false);
     }
   }, []);
 
@@ -89,23 +106,11 @@ const App: React.FC = () => {
           <div className={classes.app}>
             <div className={classes.mainArea}>
               <Switch>
-                <Route 
-                  exact
-                  path="/"
-                  render={(route) => <HomePage {...route} spotifyToken={spotifyToken} />}
-                />
+                <Route exact path="/" render={homePageRender} />
                 <Route exact path="/queue" component={QueuePage} />
-                <Route
-                  exact
-                  path="/search"
-                  render={(route) => <SearchPage {...route} route={route} spotifyToken={spotifyToken} />}
-                />
-                <Route
-                  exact
-                  path="/search/:source/:id"
-                  render={(route) => <SearchPage {...route} route={route} spotifyToken={spotifyToken} />}
-                />
-                <Route component={HomePage} />
+                <Route exact path="/search" render={searchPageRender} />
+                <Route exact path="/search/:source/:id" render={searchPageRender} />
+                <Route render={homePageRender} />
               </Switch>
             </div>
             <footer className={classes.bottomBar}>
