@@ -93,7 +93,7 @@ const App: React.FC = () => {
       }
     }
 
-    if (is.ios() && is.mobile()) {
+    if (is.ios() && (is.mobile() || is.ipad())) {
       setSoundcloudSupport(false);
     }
   }, []);
