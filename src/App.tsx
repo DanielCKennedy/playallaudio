@@ -81,7 +81,7 @@ const App: React.FC = () => {
   const searchPageRender = (route: RouteComponentProps<any, StaticContext, any>) => <SearchPage {...route} route={route} spotifyToken={spotifyToken} />
 
   useEffect(() => {
-    if (is.not.safari() && is.not.mobile()) {
+    if (is.not.safari() && is.not.mobile() && is.not.ipad()) {
       setSpotifySupport(true);
 
       const spotifyAccessToken = decodeSpotifyToken();
