@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { CssBaseline, Theme } from '@material-ui/core';
 import { ThemeProvider, makeStyles, createStyles } from '@material-ui/styles';
 import { darkTheme } from './theme';
@@ -10,6 +10,7 @@ import MediaBar from './components/MediaBar';
 import QueuePage from './components/QueuePage';
 import is from 'is_js';
 import { StaticContext, RouteComponentProps } from 'react-router';
+import ScrollToTop from './components/ScrollToTop';
 
 const bottomBarHeight = 90;
 
@@ -76,6 +77,7 @@ const App: React.FC = () => {
   const [spotifyToken, setSpotifyToken] = useState("");
   const [isSpotifySupported, setSpotifySupport] = useState(false);
   const [isSoundcloudSupported, setSoundcloudSupport] = useState(true);
+  const scrollablePage = useRef<HTMLDivElement>(null);
 
   const homePageRender = (route: RouteComponentProps<any, StaticContext, any>) => <HomePage {...route} spotifyToken={spotifyToken} spotifySupport={isSpotifySupported} soundcloudSupport={isSoundcloudSupported} />
   const searchPageRender = (route: RouteComponentProps<any, StaticContext, any>) => <SearchPage {...route} route={route} spotifyToken={spotifyToken} />
@@ -104,7 +106,8 @@ const App: React.FC = () => {
       <PlayallPlayer soundcloudClientId={SOUNDCLOUD_CLIENT_ID} spotifyAccessToken={spotifyToken}>
         <Router>
           <div className={classes.app}>
-            <div className={classes.mainArea}>
+            <div className={classes.mainArea} ref={scrollablePage}>
+              <ScrollToTop element={scrollablePage.current} />
               <Switch>
                 <Route exact path="/" render={homePageRender} />
                 <Route exact path="/queue" component={QueuePage} />
