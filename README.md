@@ -1,12 +1,13 @@
-[![Netlify Status](https://api.netlify.com/api/v1/badges/6d205b7b-f4d7-48fe-8672-411ebbecffbe/deploy-status)](https://app.netlify.com/sites/playallaudio/deploys)
 # Playall Audio :musical_note:
 Website to search for, queue up, and listen to music from multiple streaming services.
 
 #### Supported music sources:
-- SoundCloud :white_check_mark:
-- Spotify :white_check_mark:
+- :white_check_mark: **SoundCloud** (Limited to artists who allow 3rd-party API usage)
+- :white_check_mark: **Spotify** (Spotify Premium required)
 
 ## Demo
+[![Netlify Status](https://api.netlify.com/api/v1/badges/6d205b7b-f4d7-48fe-8672-411ebbecffbe/deploy-status)](https://app.netlify.com/sites/playallaudio/deploys)
+
 The live site can be found at: https://playall.audio/
 
 ![Homepage](./screenshots/homepage.PNG)
@@ -14,6 +15,7 @@ The live site can be found at: https://playall.audio/
 ## Technologies
 - React
 - Material UI
+- TypeScript
 - Lambda
 - Netlify (for deployment)
 

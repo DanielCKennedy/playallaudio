@@ -7,6 +7,7 @@ import { Track, TrackSource } from '../types/playerTypes';
 import { PlayerDispatchContext } from './PlayallPlayer';
 import { createQueue } from '../utils/queueUtils';
 import { featuredPlaylists } from '../constants/playlistConstants';
+import { Link } from 'react-router-dom';
 
 const height = 275;
 
@@ -44,21 +45,23 @@ const PlaylistList: React.FC<PlaylistListProps> = ({ title, spotifyToken }) => {
       title={title}
       items={featuredPlaylists.map((playlist) =>
         <GridListTile key={playlist.title} onClick={() => playerDispatch({ type: 'SET_QUEUE', queue: createQueue(playlist.tracks[0], playlist.tracks.filter(t => spotifyToken ? true : t.details.source !== TrackSource.SPOTIFY)) })}>
-          <PlaylistPlayCard title={playlist.title} url={playlist.url} height={height} />
-          <GridListTileBar
-            title={
-              <Typography variant="h5">
-                <div className={classes.nameContainer}>
-                  {playlist.title}
-                </div>
-              </Typography>
-            }
-          // actionIcon={
-          //   <IconButton aria-label="Add to queue" color="secondary">
-          //     <QueueRoundedIcon />
-          //   </IconButton>
-          // }
-          />
+          <Link to="/queue">
+            <PlaylistPlayCard title={playlist.title} url={playlist.url} height={height} />
+            <GridListTileBar
+              title={
+                <Typography variant="h5">
+                  <div className={classes.nameContainer}>
+                    {playlist.title}
+                  </div>
+                </Typography>
+              }
+            // actionIcon={
+            //   <IconButton aria-label="Add to queue" color="secondary">
+            //     <QueueRoundedIcon />
+            //   </IconButton>
+            // }
+            />
+          </Link>
         </GridListTile>
       )}
     />
