@@ -124,9 +124,7 @@ const SearchContent: React.FC<SearchContentProps> = ({ source, artistSearchId, s
   }, [searchText, spotifyToken]);
 
   const searchSoundcloudArtistId = (id: string) => {
-    soundcloud.get(`/tracks`, {
-      user_id: id,
-    }).then((tracks: SoundCloud.Track[]) => {
+    soundcloud.get(`/users/${id}/tracks`).then((tracks: SoundCloud.Track[]) => {
       var newTrackList: Track[] = [];
       tracks.map((track: SoundCloud.Track) => {
         newTrackList.push(createTrack({
